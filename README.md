@@ -5,6 +5,6 @@
 > - main function, opening on files or more, and reading the lines.
 > - main header file including required functions.
 > - implemented linked list header file + code for functions
-> - started the implementation of the preprocessing function
+> - preprocessing function implementation - done. 
 
 
