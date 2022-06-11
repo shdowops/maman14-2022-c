@@ -20,9 +20,9 @@ void preprocessor(FILE *codefile, char *filename)
         {
             found = strstr(line, MACROSTART);
 
-            if (found == NULL)
+            if (!found)
             {
-                if ((macroToApply = isMacro(line, head)) != NULL)
+                if ((macroToApply = isMacro(line, head)))
                     fputs(macroToApply->macro, processedfile);
                 else
                     fputs(line, processedfile);
@@ -50,7 +50,7 @@ void preprocessor(FILE *codefile, char *filename)
         else
         {
             found = strstr(line, MACROEND);
-            if (found == NULL)
+            if (!found)
             {
                 macro = (char *)realloc(macro, MAX_LINE_LENGTH * macrolines);
                 strcat(macro, line);
@@ -70,7 +70,7 @@ void preprocessor(FILE *codefile, char *filename)
 
 Macro *isMacro(char *str, Macro *head)
 {
-    while (head != NULL)
+    while (head)
     {
         if (strcmp(str, head->name) == 0)
             return head;
@@ -81,7 +81,7 @@ Macro *isMacro(char *str, Macro *head)
 
 void addToMacroList(Macro *newMacro,Macro *head)
 {
-    while(head->next==NULL)
+    while(head->next)
         head=head->next;
     
     head->next = newMacro;
