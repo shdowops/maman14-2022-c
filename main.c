@@ -16,17 +16,16 @@ int main(int argc, const char *argv[])
     /*At least one file in user input*/
     for (i = 1; i < argc; i++)
     {
-        char *fullfilename;
         char *filename = malloc(strlen(argv[i]) + 1);
         strcpy(filename, argv[i]);
-        fullfilename = strcat(filename, ".as");
-        fptr = fopen(fullfilename, "r");
+        strcat(filename, ".as");
+        fptr = fopen(filename, "r");
 
         if (fptr == NULL)
-            printf("Unable to open the file: %s\n", fullfilename);
+            printf("Unable to open the file: %s\n", filename);
         else
         {
-            preprocessor(fptr);
+            preprocessor(fptr,filename);
         }
     }
     /*Finished processing all files without errors*/
