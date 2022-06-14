@@ -6,14 +6,13 @@ void preprocessor(FILE *codefile, char *filename)
     FILE *processedfile;
     char line[MAX_LINE_LENGTH];
     char *found, *name, *macro, *token;
-    
-    Macro *newMacro=NULL, *macroToApply=NULL, *head=NULL;
+
+    Macro *newMacro = NULL, *macroToApply = NULL, *head = NULL;
     int macroflag = 0, macrolines = 1, firstmacro = 1;
     processedfile = fopen(strcat(strtok(filename, SEPARATOR), ".am"), "w");
     macro = (char *)malloc(MAX_LINE_LENGTH);
 
-    /* searching file for macros and saving a processed file
-     *  TODO: add expansion of macros                      */
+    /* searching file for macros and saving a processed file*/
     while ((fgets(line, MAX_LINE_LENGTH, codefile) != NULL))
     {
         if (!macroflag)
@@ -32,7 +31,7 @@ void preprocessor(FILE *codefile, char *filename)
                 macroflag = 1;
                 strtok(line, " ");
                 token = strtok(NULL, " "); /*Move to the macro name*/
-                if(token == NULL)
+                if (token == NULL)
                 {
                     /*Add error message for empty macro declaration*/
                     continue;
@@ -41,10 +40,13 @@ void preprocessor(FILE *codefile, char *filename)
                 name = (char *)malloc(sizeof(token));
                 strcpy(name, token);
                 newMacro->name = name;
-                if(firstmacro)
+                if (firstmacro)
+                {
                     head = newMacro;
+                    firstmacro = 0;
+                }
                 else
-                    addToMacroList(newMacro,head);
+                    addToMacroList(newMacro, head);
             }
         }
         else
@@ -61,11 +63,12 @@ void preprocessor(FILE *codefile, char *filename)
                 macroflag = 0;
                 newMacro->macro = macro;
                 newMacro->next = NULL;
+                macrolines = 1;
             }
         }
     }
-    fclose(codefile);
     fclose(processedfile);
+    freeMacros(head);
 }
 
 Macro *isMacro(char *str, Macro *head)
@@ -79,10 +82,21 @@ Macro *isMacro(char *str, Macro *head)
     return NULL;
 }
 
-void addToMacroList(Macro *newMacro,Macro *head)
+void addToMacroList(Macro *newMacro, Macro *head)
 {
-    while(head->next)
-        head=head->next;
-    
+    while (head->next!=NULL)
+        head = head->next;
+
     head->next = newMacro;
+}
+
+void freeMacros(Macro *head)
+{
+    if(!head)
+        return;
+    if(head->next)
+        freeMacros(head->next);
+
+    free(head);
+    
 }

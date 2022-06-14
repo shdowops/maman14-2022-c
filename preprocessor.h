@@ -18,4 +18,5 @@ typedef struct Macro
 void preprocessor(FILE *codefile, char *filename);
 Macro *isMacro(char *str, Macro *head);
 void  addToMacroList(Macro *newMacro,Macro *head);
+void freeMacros(Macro *head);
 #endif

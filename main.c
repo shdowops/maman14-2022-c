@@ -22,11 +22,15 @@ int main(int argc, const char *argv[])
         fptr = fopen(filename, "r");
 
         if (fptr == NULL)
-            printf("Unable to open the file: %s\n", filename);
-        else
         {
-            preprocessor(fptr,filename);
+            printf("Unable to open the file: %s\n", filename);
+            continue;
         }
+        else
+            preprocessor(fptr,filename);            
+
+        free(filename);
+        fclose(fptr);
     }
     /*Finished processing all files without errors*/
     return 0;
