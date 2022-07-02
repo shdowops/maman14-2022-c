@@ -1,6 +1,4 @@
 #include "main.h"
-#include "preprocessor.h"
-
 /*Main function to run the compiler*/
 int main(int argc, const char *argv[])
 {
@@ -18,7 +16,7 @@ int main(int argc, const char *argv[])
     {
         char *filename = malloc(strlen(argv[i]) + 1);
         strcpy(filename, argv[i]);
-        strcat(filename, ".as");
+        strcat(filename, ORIGINAL_EXT);
         fptr = fopen(filename, "r");
 
         if (fptr == NULL)
@@ -27,10 +25,14 @@ int main(int argc, const char *argv[])
             continue;
         }
         else
-            preprocessor(fptr,filename);            
+        {
+            preprocessor(fptr, filename);
+            fclose(fptr);
+            firstpass(filename);
+            secondpass();
+        }
 
         free(filename);
-        fclose(fptr);
     }
     /*Finished processing all files without errors*/
     return 0;

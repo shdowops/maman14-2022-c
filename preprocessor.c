@@ -9,8 +9,7 @@ void preprocessor(FILE *codefile, char *filename)
 
     Macro *newMacro = NULL, *macroToApply = NULL, *head = NULL;
     int macroflag = 0, macrolines = 1, firstmacro = 1;
-    processedfile = fopen(strcat(strtok(filename, SEPARATOR), ".am"), "w");
-    macro = (char *)malloc(MAX_LINE_LENGTH);
+    processedfile = fopen(strcat(strtok(filename, SEPARATOR), EXPANDED_EXT), "w");
 
     /* searching file for macros and saving a processed file*/
     while ((fgets(line, MAX_LINE_LENGTH, codefile) != NULL))
@@ -29,6 +28,7 @@ void preprocessor(FILE *codefile, char *filename)
             else
             {
                 macroflag = 1;
+                macro = (char *)malloc(MAX_LINE_LENGTH);
                 strtok(line, " ");
                 token = strtok(NULL, " "); /*Move to the macro name*/
                 if (token == NULL)
@@ -84,7 +84,7 @@ Macro *isMacro(char *str, Macro *head)
 
 void addToMacroList(Macro *newMacro, Macro *head)
 {
-    while (head->next!=NULL)
+    while (head->next != NULL)
         head = head->next;
 
     head->next = newMacro;
@@ -92,11 +92,10 @@ void addToMacroList(Macro *newMacro, Macro *head)
 
 void freeMacros(Macro *head)
 {
-    if(!head)
+    if (!head)
         return;
-    if(head->next)
+    if (head->next)
         freeMacros(head->next);
 
     free(head);
-    
 }

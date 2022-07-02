@@ -1,5 +1,5 @@
 #include "secondpass.h"
-void secondpass(FILE *firstpasscomplete)
+void secondpass(void)
 {
-    
+    printf("Second pass\n");
 }

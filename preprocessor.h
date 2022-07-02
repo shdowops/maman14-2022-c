@@ -1,10 +1,9 @@
 #ifndef PREPROCESSOR_H
 #define PREPROCESSOR_H
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "global.h"
 #define MAX_LINE_LENGTH 81
-#define SEPARATOR "."
 #define MACROSTART "macro"
 #define MACROEND "endmacro"
 

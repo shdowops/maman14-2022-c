@@ -1,6 +1,6 @@
 #include "firstpass.h"
 
-void firstpass(FILE *expanded)
+void firstpass(char *filename)
 {
-    
+    printf("Filename: %s\n",filename);
 }

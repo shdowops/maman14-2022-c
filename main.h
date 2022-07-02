@@ -3,4 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "preprocessor.h"
+#include "firstpass.h"
+#include "secondpass.h"
+#include "global.h"
 #endif
