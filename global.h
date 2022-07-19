@@ -4,4 +4,6 @@
 #define EXPANDED_EXT ".am"
 #define SEPARATOR "."
 #include <stdio.h>
+
+int IC, DC;
 #endif
