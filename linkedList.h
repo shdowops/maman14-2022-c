@@ -40,3 +40,11 @@ bool add_value(LinkedList *linked_list, void *data);
 /**Searches if the data already exists in the linked list*/
 void *search_linked_list(LinkedList *linked_list, void *data, IsEqual is_equal);
 #endif
+
+
+/**Deletes a Node from the linked list
+ * params:
+ *  @linked_list: The target linked list
+ *  @data: The data to delete
+*/
+int deleteNode(LinkedList *linked_list, void *key);

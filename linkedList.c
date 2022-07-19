@@ -70,3 +70,41 @@ LinkedList *create_linked_list()
     result->size = 0;
     return result;
 }
+
+/**Deletes a Node from the linked list*/
+int deleteNode(LinkedList *linked_list, void *key)
+{
+     
+    /** Store first node*/
+    Node* temp = linked_list->start;
+    Node* prev = NULL;
+     
+    /** If head node itself holds the key to be deleted*/
+    if (temp != NULL && temp->data == key)
+    {
+        linked_list->start = temp->next; // Changed head
+        free(temp);            // free old head
+        return 1;
+    }
+    /*Else Search for the node to be deleted, 
+     while keeping track of the previous node as we
+     need to change 'prev->next' */
+      else
+        {
+         while (temp != NULL && temp->data != key)
+            {
+                prev = temp;
+                temp = temp->next;
+            }
+ 
+             // If key was not present in linked list
+              if (temp == NULL)
+        return 0;
+    /** Unlink the node from linked list*/
+    prev->next = temp->next;
+ 
+    /** Free memory*/
+    free (temp);
+    return 1;
+    }
+}
