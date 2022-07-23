@@ -1,17 +1,26 @@
 
+#include <Symbol.h>
+
+
+
+
 typedef struct CommandDeclaration
 {
-	int opcode;
-	int source;
-	int destination;
-	char command_type;
-	char *command_name;
+	char *opcode;
+	char *source;
+	char *destination;
+	char *command_type; 
+	char *name_trans;
 	char *data;
-	int value;
 } CommandDeclaration;
 
 CommandDeclaration commands[] = {
-	{0, 1, 'R', "mov","",0},
+	/*
+	A=
+	R=
+	E=
+	*/
+	{0, 1, "00", "mov","",0},
 	{1, 2, 'R', "cmp","",0},
 	{2, 3, 'R', "add","",0},
 	{3, 4, 'R', "sub","",0},
@@ -28,12 +37,6 @@ CommandDeclaration commands[] = {
 	{14, -1, 'I', "rts","",0},
 	{15, -1, 'I', "hlt","",0}
 	
+CommandDeclaration *create_declare(char *str);
 
-    Symbol *create_CommandR(CommandDeclaration *str, int tyP, int val1)
-{
-	Symbol result = malloc(sizeof(Symbol));
-	result->name = str;
-	result->type = tyP;
-	result->value = val1;
-	return result;
-}
+Node create_Command(Symbol sym, char *str);

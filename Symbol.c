@@ -30,3 +30,8 @@ Symbol *create_Symbol(SymbolTable *symbol_table)
     return add_value(symbol_table, symNew);
     return 1;
 }
+
+void add_Command(Symbol *symbol, void *data)
+{
+    add_value(symbol->comm,data);
+}
