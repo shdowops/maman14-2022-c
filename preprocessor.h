@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "global.h"
-#define MAX_LINE_LENGTH 81
 #define MACROSTART "macro"
 #define MACROEND "endmacro"
 

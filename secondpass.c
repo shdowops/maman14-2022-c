@@ -2,9 +2,13 @@
 extern int IC, DC;
 void secondpass(char * filename)
 {
+    char line[MAX_LINE_LENGTH];
+    FILE *processedfile = fopen(filename, "r");
     IC = 0;
     /*read next line from file*/
-
+    while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
+    {
+        printf("%s",line);
         /* is label ?*/
             /*skip to next field*/
         /* is data? string? struct? extern? */
@@ -14,8 +18,8 @@ void secondpass(char * filename)
             /*  continue; */
         
         /* finish encoding operands */
-        /* update IC -> IC + L
-
+        /* update IC -> IC + L */
+    }
     /* end reading file */
 
     /*if errors*/

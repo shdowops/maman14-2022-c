@@ -82,8 +82,8 @@ int deleteNode(LinkedList *linked_list, void *key)
     /** If head node itself holds the key to be deleted*/
     if (temp != NULL && temp->data == key)
     {
-        linked_list->start = temp->next; // Changed head
-        free(temp);            // free old head
+        linked_list->start = temp->next; /* Changed head*/
+        free(temp);            /* free old head*/
         return 1;
     }
     /*Else Search for the node to be deleted, 
@@ -97,7 +97,7 @@ int deleteNode(LinkedList *linked_list, void *key)
                 temp = temp->next;
             }
  
-             // If key was not present in linked list
+             /* If key was not present in linked list*/
               if (temp == NULL)
         return 0;
     /** Unlink the node from linked list*/
