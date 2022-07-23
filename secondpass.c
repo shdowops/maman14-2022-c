@@ -8,12 +8,17 @@ void secondpass(char * filename)
     /*read next line from file*/
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
-        printf("%s",line);
         /* is label ?*/
+        if(isLabel(line))
+            continue;
             /*skip to next field*/
         /* is data? string? struct? extern? */
+        if(isDataSymbol(line))
+            continue;
           /*  continue; */
         /* is entry */
+        if(isEntry(line))
+            continue;
             /* insert entry to entry symbol table */
             /*  continue; */
         
@@ -24,5 +29,6 @@ void secondpass(char * filename)
 
     /*if errors*/
         /*stop!!!!*/
+
     /* save files */
 }
