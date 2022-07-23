@@ -14,18 +14,19 @@ char *checklabel(char *label)
 
 char *isLabel(char *line)
 {
-  char * temp = (char *) malloc(sizeof(char)*strlen(line));
+  char *temp = (char *)malloc(sizeof(char) * strlen(line));
   strcpy(temp, line);
   temp = strtok(temp, ":");
   if (strcmp(line, temp) == 0)
-    return NULL;
-    
-  return temp;
+    return false;
+  if((temp = strtok(NULL,":")) != NULL )
+    /*Add error for double : in label.*/
+
+  return true;
 }
 
 bool isEmptyLine(char *line)
 {
-
   char *temp = line;
   while (*temp)
   {
@@ -44,7 +45,7 @@ bool isComment(char *line)
 char *trim(char *line)
 {
   int i;
-  
+
   while (isspace(*line)) /*skip left whitespaces*/
     line++;
   /*skip right whitespaces*/
