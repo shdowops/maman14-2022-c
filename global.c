@@ -1,38 +1,55 @@
 #include "global.h"
 
-char * checklabel(char * label)
+char *checklabel(char *label)
 {
-    if(strlen(label)> MAX_LABLE_LENGTH)
-        /*Add error*/
-        return NULL;
-    
-    if(ilegalLabelName())
-        /*Add error*/
-        return NULL;
+  if (strlen(label) > MAX_LABLE_LENGTH)
+    /*Add error*/
+    return NULL;
 
+  /* if(ilegalLabelName())
+       Add error
+       return NULL;*/
+  return NULL;
 }
-
 
 char *isLabel(char *line)
 {
-    char *temp = strok(line, ":");
-    if(temp != NULL)
-        return checklabel(temp);
-
+  char * temp = (char *) malloc(sizeof(char)*strlen(line));
+  strcpy(temp, line);
+  temp = strtok(temp, ":");
+  if (strcmp(line, temp) == 0)
     return NULL;
+    
+  return temp;
 }
 
-bool isEmptyLine(const char *line)
+bool isEmptyLine(char *line)
 {
-  while (*line) {
-    if (!isspace(*line))
+
+  char *temp = line;
+  while (*temp)
+  {
+    if (!isspace(*temp))
       return false;
-    line++;
+    temp++;
   }
   return true;
 }
 
-bool isComment(const char *line)
+bool isComment(char *line)
 {
-    return line[0] == ';' ? true : false;
+  return (line[START_OF_LINE] == ';' || line == NULL) ? true : false;
+}
+
+char *trim(char *line)
+{
+  int i;
+  
+  while (isspace(*line)) /*skip left whitespaces*/
+    line++;
+  /*skip right whitespaces*/
+  for (i = strlen(line) - 1; (isspace(line[i])); i--)
+    ;
+  line[i + 1] = '\0';
+  return line;
 }

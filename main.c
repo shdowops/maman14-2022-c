@@ -29,9 +29,7 @@ int main(int argc, const char *argv[])
             preprocessor(fptr, filename);
             fclose(fptr);
             firstpass(filename);
-            secondpass(filename);
         }
-
         free(filename);
     }
     /*Finished processing all files without errors*/
