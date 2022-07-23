@@ -3,10 +3,11 @@ extern int IC, DC;
 
 void firstpass(char *filename)
 {
-    char line[MAX_LINE_LENGTH], *temp, *trimmedline;
-    bool labelflag = false;
+    char line[MAX_LINE_LENGTH], *trimmedline;
+    bool is_label, is_entry, is_extern, is_datasymbol;
     FILE *processedfile = fopen(filename, "r");
     IC = DC = 0;
+    is_label = is_entry = is_extern = is_datasymbol = false;
     /*read next line from file*/
     if (processedfile != NULL)
     {
@@ -15,19 +16,19 @@ void firstpass(char *filename)
             trimmedline = trim(line);
             if (isEmptyLine(trimmedline) || isComment(trimmedline))
                 continue;
-                
+
             /*it is label? */
-            temp = isLabel(trimmedline);
-            if (temp != NULL)
-                labelflag = true;
-                
+            is_label = isLabel(trimmedline);
+
             /*check if .data? .string? .struct? */
+            is_datasymbol = isDataSymbol(trimmedline);
             /*if label flaged*/
-            /*insert to symbol list with data flag with DC value (if exist error)*/
+            /*insert to symbol list with data flag with DC value (if exist send error)*/
             /*continue */
 
             /*if .extern? .entry? */
-            /* if extern*/
+            is_entry = isEntry(trimmedline);
+            is_extern = isExtern(trimmedline);
             /*insert to symbol list*/
 
             /* if flag is label */
@@ -36,7 +37,7 @@ void firstpass(char *filename)
             /*check operands and count them*/
             /*build binary code of the instruction*/
             /* IC --> IC +L */
-            labelflag = false;
+            is_label = is_entry = is_extern = is_datasymbol = false;
         }
         /* Finished reading the file*/
 
