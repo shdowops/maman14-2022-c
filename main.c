@@ -29,7 +29,7 @@ int main(int argc, const char *argv[])
             preprocessor(fptr, filename);
             fclose(fptr);
             firstpass(filename);
-            secondpass();
+            secondpass(filename);
         }
 
         free(filename);
