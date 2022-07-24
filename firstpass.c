@@ -4,10 +4,10 @@ extern int IC, DC;
 void firstpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], *trimmedline;
-    bool is_label, is_entry, is_extern, is_datasymbol;
+    bool is_label, is_entry, is_extern, is_datasymbol, is_error;
     FILE *processedfile = fopen(filename, "r");
     IC = DC = 0;
-    is_label = is_entry = is_extern = is_datasymbol = false;
+    is_label = is_error = false;
     /*read next line from file*/
     if (processedfile != NULL)
     {
@@ -21,30 +21,53 @@ void firstpass(char *filename)
             is_label = isLabel(trimmedline);
 
             /*check if .data? .string? .struct? */
-            is_datasymbol = isDataSymbol(trimmedline);
-            /*if label flaged*/
-            /*insert to symbol list with data flag with DC value (if exist send error)*/
-            /*continue */
+            if (isDataSymbol(trimmedline))
+                if (is_label)
+                {
+                    printf("Data Symbol + lable\n");
+                    printf("%s\n",trimmedline);
+                    /*insert tavit as data label with value of DC*/
+                    /*determine symboltype encode the memory*/
+                    /*update DC */
+                    continue;
+                }
 
             /*if .extern? .entry? */
-            is_entry = isEntry(trimmedline);
-            is_extern = isExtern(trimmedline);
-            /*insert to symbol list*/
+            if( isEntry(trimmedline) || isExtern(trimmedline))
+                if(isExtern(trimmedline))
+                {
+                    printf("It is extern!\n");
+                    printf("%s\n",trimmedline);
+                    /*add external symbols (one or more) to symbol list without a value*/
+                    continue;
+                }
 
             /* if flag is label */
-            /*Insert to symbol list as IC error if already exist*/
-            /* check instruction, if not exist, add error. */
-            /*check operands and count them*/
-            /*build binary code of the instruction*/
-            /* IC --> IC +L */
-            is_label = is_entry = is_extern = is_datasymbol = false;
+            if(is_label)
+            {
+                printf("Inside label\n");
+                printf("%s\n",trimmedline);
+                /* insert to symbol as code with IC value*/
+                /* check instruction, if not exist, add error. */
+                /*check operands and count them*/
+                /*build binary code of the instruction*/
+                /* IC --> IC +L */
+                IC++;
+            }
         }
         /* Finished reading the file*/
 
-        /*if got errors
-            , stop.
+        if (is_error)
+            /* print errors */
+                return;
 
-        update symbol list data adding the right IC*/
+        /* update symbol list data adding the right IC
+            while(headptr != NULL)
+            {
+                headptr->dc+=IC;
+                headptr=headptr->next;
+            }
+        */
 
         /*Start second pass*/
         secondpass(filename);
