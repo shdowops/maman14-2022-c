@@ -1,5 +1,5 @@
 #include "Symbol.h"
-void *search_symbol(Symbol *symbol, SymbolTable *symbol_table, char *name, IsEqual is_equal);
+void *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
 {
 
     int i;
@@ -46,4 +46,15 @@ void add_Command(Symbol *symbol, void *data)
 
 
 
-/*char find_Symbol address*/
+
+/**The method return the address of the Symbol
+ * input param:
+ * @Symbol *sym: the symbol of which the address is needed
+ * output:
+ * The required address
+*/
+char *get_sym_address(Symbol *sym)
+{
+    return sym->address;
+
+}

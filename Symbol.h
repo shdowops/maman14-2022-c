@@ -35,5 +35,15 @@ void delete_symbol(Symbol *sym, SymbolTable symTable);
 bool add_Command(Symbol *symbol, void *data);
 
 /**Searches if the data already exists in the symbol*/
-void *search_symbol(Symbol *symbol, SymbolTable *symbol_table, char *name, IsEqual is_equal);
+Symbol *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
 #endif
+
+
+
+/**The method return the address of the Symbol
+ * input param:
+ * @Symbol *sym: the symbol of which the address is needed
+ * output:
+ * The required address
+*/
+char *get_sym_address(Symbol *sym);
