@@ -148,5 +148,5 @@ void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char
              }
 
     }
-
+    return 1;
 }

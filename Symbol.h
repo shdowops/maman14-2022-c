@@ -14,25 +14,30 @@ typedef struct Symbol
 
 
 /**
- * Creates a new symbol
+ * The Method creates a new symbol based on the params that it recieves.
+ * Input
+ * @ic: the instruction count which will become the address of the Symbol
+ * @name: the name of the Symbol
+ * return:
+ * pointer to newly created Symbol
  */
-Symbol *create_symbol(int ic);
+Symbol *create_symbol(int ic, char *name);
 
 /**
  * deletes a given symbol
- *
+ *input:
+ *  @sym: the SYmbol that needs to be deleted
+ *  @sym_table: symbol list to which the symbol will be added
  */
-void delete_symbol(Symbol *sym, SymbolTable symTable);
+void delete_symbol(Symbol *sym, SymbolTable *sym_table);
 
 /**
- * adds a symbol
+ * adds a command
  * params:
  *  @symbol: The target symbol
  *  @data: The data to insert
  */
-
-
-bool add_Command(Symbol *symbol, void *data);
+bool add_command(Symbol *symbol, void *data);
 
 /**Searches if the data already exists in the symbol*/
 Symbol *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
@@ -41,8 +46,8 @@ Symbol *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
 
 
 /**The method return the address of the Symbol
- * input param:
- * @Symbol *sym: the symbol of which the address is needed
+ * input params:
+ * @sym: the symbol of which the address is needed
  * output:
  * The required address
 */

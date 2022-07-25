@@ -46,8 +46,8 @@ CommandDeclaration commands[] = {
     Input params:
  *  @str: string which is the name of  the command
 */
-CommandDeclaration *create_declare(char *str)
-{}
+CommandDeclaration *create_declare(char *str);
+
 
 
 /*
@@ -60,8 +60,7 @@ CommandDeclaration *create_declare(char *str)
  *@str: string which is the name of  the command
 
 */
-   create_command(Symbol *sym, char *str)
-   {}
+   create_command(Symbol *sym, char *str);
 
 
    /*
@@ -73,8 +72,7 @@ CommandDeclaration *create_declare(char *str)
  *@ CommandDeclaration *comm_decs: the command-declaration to which the address will be added
 
 */
-void add_src(char *src,  CommandDeclaration *comm_dec )
-{}
+void add_src(char *src,  CommandDeclaration *comm_dec );
 
 /*
     The method recieves a string that represents the address of the destination of data
@@ -85,8 +83,17 @@ void add_src(char *src,  CommandDeclaration *comm_dec )
  *@ CommandDeclaration *comm_decs: the command-declaration to which the address will be added
 
 */
-void add_dest(char *dest,  CommandDeclaration *comm_dec )
-{
-	Symbol *sym= malloc(sizeof(Symbol))
-	search_symbol(Symbol *symbol, SymbolTable *symbol_table, char *name, IsEqual is_equal)
-}
+void add_dest(char *dest,  CommandDeclaration *comm_dec );
+
+/*
+    The method recieves a command, a source Symbol and adestination Symbol.
+    The method locates the address of each symbol and inserts them into the
+    proper locations within the command-declaration.
+    Input params:
+ *@ SymbolTable sym_tab: the symbol table from where we will find the symbols.
+ *@ CommandDeclaration *comm_dec: the command-declaration to which the addresses will be added
+ *@ char *src:  the string representing the Symbol of who's address is the source to be placed in the command-declaration
+ *@ char *dest:  the string representing the Symbol of who's address is the destination to be placed in the command-declaration
+ 
+*/
+void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char *src, char *dest);

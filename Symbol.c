@@ -12,34 +12,57 @@ void *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
     return NULL;
 }
 
-bool add_Name(Symbol *sym, char *name)
-{
-    sym->name=name;
-    return 1;
-}
 
-int delete_Symbol(Symbol *sym, SymbolTable symTable)
+
+/**
+ * deletes a given symbol
+ *input:
+ *  @sym: the SYmbol that needs to be deleted
+ *  @sym_table: symbol list to which the symbol will be added
+ */
+void delete_symbol(Symbol *sym, SymbolTable *sym_table);
 {
     return deleteNode(symTable->linked_list, sym);
     
 }
 
-Symbol *create_Symbol(SymbolTable *symbol_table, int ic)
+/**
+ * Not FInished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * The Method creates a new symbol based on the params that it recieves.
+ * Input
+ * @ic: the instruction count which will become the address of the Symbol
+ * @name: the name of the Symbol
+ * return:
+ * pointer to newly created Symbol
+ */
+Symbol *create_symbol(int ic, char *name)
 {
+
+
+    
+    Symbol *symNew = malloc(sizeof(Symbol));
     /*
 
-    convert IC to binary
+    convert IC to binary !!!! We need to crate method of transform in to binary!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    Symbol->ic= result of binary transformation.
+    Symbol->ic= result of binary transformation;
     
     
     */
-    Symbol *symNew = malloc(sizeof(Symbol));
+   /*copy the label name into the Symbol Name*/
+    strcpy(sym->name,name);
+    /*adding the Symbol to it's list*/
     return add_value(symbol_table, symNew);
     return 1;
 }
 
-void add_Command(Symbol *symbol, void *data)
+
+/**
+ * adds a command
+ * params:
+ *  @symbol: The target symbol
+ *  @data: The data to insert
+ */
 {
     add_value(symbol->comm,data);
 }
@@ -47,9 +70,9 @@ void add_Command(Symbol *symbol, void *data)
 
 
 
-/**The method return the address of the Symbol
- * input param:
- * @Symbol *sym: the symbol of which the address is needed
+/**The method returns the address of the Symbol
+ * input params:
+ * @sym: the symbol of which the address is needed
  * output:
  * The required address
 */
@@ -58,3 +81,4 @@ char *get_sym_address(Symbol *sym)
     return sym->address;
 
 }
+
