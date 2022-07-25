@@ -9,13 +9,14 @@ typedef struct Symbol
 {
     char *name;
     LinkedList *comm;
+    char[4] address;   
 } Symbol;
 
 
 /**
  * Creates a new symbol
  */
-Symbol *create_symbol();
+Symbol *create_symbol(int ic);
 
 /**
  * deletes a given symbol

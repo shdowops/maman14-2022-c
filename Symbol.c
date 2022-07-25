@@ -24,8 +24,16 @@ int delete_Symbol(Symbol *sym, SymbolTable symTable)
     
 }
 
-Symbol *create_Symbol(SymbolTable *symbol_table)
+Symbol *create_Symbol(SymbolTable *symbol_table, int ic)
 {
+    /*
+
+    convert IC to binary
+
+    Symbol->ic= result of binary transformation.
+    
+    
+    */
     Symbol *symNew = malloc(sizeof(Symbol));
     return add_value(symbol_table, symNew);
     return 1;
@@ -35,3 +43,7 @@ void add_Command(Symbol *symbol, void *data)
 {
     add_value(symbol->comm,data);
 }
+
+
+
+/*char find_Symbol address*/
