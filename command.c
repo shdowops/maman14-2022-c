@@ -133,7 +133,7 @@ void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char
         Symbol *sym_dest = search_symbol(sym_tab, dest, is_equal);
         add_src(get_sym_address(Symbol),  CommandDeclaration *comm_dec );
 
-            if(comm_dec->typ!=3)
+            if(comm_dec->typ!=2)
              
              {
                 /*
