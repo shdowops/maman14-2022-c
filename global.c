@@ -1,38 +1,63 @@
 #include "global.h"
 
-char * checklabel(char * label)
+bool isLabel(char *line)
 {
-    if(strlen(label)> MAX_LABLE_LENGTH)
-        /*Add error*/
-        return NULL;
-    
-    if(ilegalLabelName())
-        /*Add error*/
-        return NULL;
+  char *temp = (char *)malloc(sizeof(char) * strlen(line));
+  strcpy(temp, line);
+  temp = strtok(temp, ":");
+  if (strcmp(line, temp) == 0)
+    return false;
 
+  return true;
 }
 
-
-char *isLabel(char *line)
+bool isEmptyLine(char *line)
 {
-    char *temp = strok(line, ":");
-    if(temp != NULL)
-        return checklabel(temp);
-
-    return NULL;
-}
-
-bool isEmptyLine(const char *line)
-{
-  while (*line) {
-    if (!isspace(*line))
+  char *temp = line;
+  while (*temp)
+  {
+    if (!isspace(*temp))
       return false;
-    line++;
+    temp++;
   }
   return true;
 }
 
-bool isComment(const char *line)
+bool isComment(char *line)
 {
-    return line[0] == ';' ? true : false;
+  return (line[START_OF_LINE] == ';' || line == NULL) ? true : false;
+}
+
+char *trim(char *line)
+{
+  int i;
+
+  while (isspace(*line)) /*skip left whitespaces*/
+    line++;
+  /*skip right whitespaces*/
+  for (i = strlen(line) - 1; (isspace(line[i])); i--)
+    ;
+  line[i + 1] = '\0';
+  return line;
+}
+
+bool isEntry(char *line)
+{
+  if(strstr(line, ENTRY))
+    return true;
+  return false;
+}
+
+bool isExtern(char *line)
+{
+  if(strstr(line,EXTERN))
+    return true;
+  return false;
+}
+
+bool isDataSymbol(char *line)
+{
+  if(strstr(line, DATA) || strstr(line, STRING) || strstr(line, STRUCT))
+    return true;
+  return false;
 }
