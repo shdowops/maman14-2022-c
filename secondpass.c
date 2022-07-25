@@ -3,6 +3,7 @@ extern int IC, DC;
 void secondpass(char * filename)
 {
     char line[MAX_LINE_LENGTH];
+    bool is_error;
     FILE *processedfile = fopen(filename, "r");
     IC = 0;
     /*read next line from file*/
@@ -10,25 +11,27 @@ void secondpass(char * filename)
     {
         /* is label ?*/
         if(isLabel(line))
-            continue;
             /*skip to next field*/
+            continue;
+
         /* is data? string? struct? extern? */
-        if(isDataSymbol(line))
+        if(isDataSymbol(line)|| isExtern(line))
             continue;
-          /*  continue; */
+
         /* is entry */
+
         if(isEntry(line))
+        /* insert entry to entry symbol table */
             continue;
-            /* insert entry to entry symbol table */
-            /*  continue; */
         
         /* finish encoding operands */
         /* update IC -> IC + L */
     }
     /* end reading file */
 
-    /*if errors*/
-        /*stop!!!!*/
+    if(is_error)
+        /*print error*/
+        return;
 
     /* save files */
 }
