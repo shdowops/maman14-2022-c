@@ -59,3 +59,13 @@ char *trim(char *line);
 
 int IC, DC;
 #endif
+
+
+/*The method recieves an integer number and converts it into binary and returns the binary number as a String.
+  input params:
+  @num: the number that will be converted to binary.
+  returns
+  @res: the string which is the binary number.
+*/
+
+char *convert_decimal_Binary(int num);

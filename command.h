@@ -63,24 +63,24 @@ CommandDeclaration *create_declare(char *str);
    create_command(Symbol *sym, char *str);
 
 
-   /*
+   /**
     The method recieves a string that represents the address of the source of data
     for the command-declaration. The method makes a copy of that address and then
     places it in the address location in the commaned-declartion structure 
     Input params:
- *@ char *src:  the string representing the address of the source to be placed in the command-declaration
- *@ CommandDeclaration *comm_decs: the command-declaration to which the address will be added
+ *@src:  the string representing the address of the source to be placed in the command-declaration
+ *@comm_decs: the command-declaration to which the address will be added
 
 */
 void add_src(char *src,  CommandDeclaration *comm_dec );
 
-/*
+/**
     The method recieves a string that represents the address of the destination of data
     for the command-declaration. The method makes a copy of that address and then
     places it in the proper address location in the commaned-declartion structure .
     Input params:
- *@ char *dest:  the string representing the address of the destination to be placed in the command-declaration
- *@ CommandDeclaration *comm_decs: the command-declaration to which the address will be added
+   @dest:  the string representing the address of the destination to be placed in the command-declaration
+   @comm_decs: the command-declaration to which the address will be added
 
 */
 void add_dest(char *dest,  CommandDeclaration *comm_dec );
@@ -90,10 +90,10 @@ void add_dest(char *dest,  CommandDeclaration *comm_dec );
     The method locates the address of each symbol and inserts them into the
     proper locations within the command-declaration.
     Input params:
- *@ SymbolTable sym_tab: the symbol table from where we will find the symbols.
- *@ CommandDeclaration *comm_dec: the command-declaration to which the addresses will be added
- *@ char *src:  the string representing the Symbol of who's address is the source to be placed in the command-declaration
- *@ char *dest:  the string representing the Symbol of who's address is the destination to be placed in the command-declaration
+ @ SymbolTable sym_tab: the symbol table from where we will find the symbols.
+ @ CommandDeclaration *comm_dec: the command-declaration to which the addresses will be added
+ @ char *src:  the string representing the Symbol of who's address is the source to be placed in the command-declaration
+ @ dest:  the string representing the Symbol of who's address is the destination to be placed in the command-declaration
  
 */
 void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char *src, char *dest);
