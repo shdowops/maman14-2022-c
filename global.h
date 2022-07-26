@@ -8,6 +8,7 @@
 #define DATA ".data"
 #define STRING ".string"
 #define STRUCT ".struct"
+#define LABLEMARK ":"
 #define MAX_LINE_LENGTH 81
 #define MAX_LABLE_LENGTH 30
 #define START_OF_LINE 0
@@ -78,4 +79,4 @@ returns:
 @res: the string representing the "chopped" location in the memory
 
 */
-char chop_string_for_address(char str);
+char *chop_string_for_address(char str[]);

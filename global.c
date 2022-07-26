@@ -4,12 +4,13 @@ bool isLabel(char *line)
 {
   char *temp = (char *)malloc(sizeof(char) * strlen(line));
   strcpy(temp, line);
-  temp = strtok(temp, ":");
+  temp = strtok(temp, LABLEMARK);
   if (strcmp(line, temp) == 0)
     return false;
 
   return true;
 }
+
 
 bool isEmptyLine(char *line)
 {
@@ -23,10 +24,12 @@ bool isEmptyLine(char *line)
   return true;
 }
 
+
 bool isComment(char *line)
 {
   return (line[START_OF_LINE] == ';' || line == NULL) ? true : false;
 }
+
 
 char *trim(char *line)
 {
@@ -41,6 +44,7 @@ char *trim(char *line)
   return line;
 }
 
+
 bool isEntry(char *line)
 {
   if(strstr(line, ENTRY))
@@ -48,12 +52,14 @@ bool isEntry(char *line)
   return false;
 }
 
+
 bool isExtern(char *line)
 {
   if(strstr(line,EXTERN))
     return true;
   return false;
 }
+
 
 bool isDataSymbol(char *line)
 {
@@ -73,11 +79,11 @@ bool isDataSymbol(char *line)
   @res: the string which is the binary number.
 */
 
-char convert_decimal_Binary(int num)
+char * convert_decimal_Binary(int num)
 {
   
   int c, k;/*Initializing variables to find the correct binary digit*/
-  char res;/* Initializing the String which will contain the binary number*/
+  char res, chTwo;/* Initializing the String which will contain the binary number*/
   /*Initializing the charachters for creating the binary number*/
   char chOne ='1';
   char chZero = '0';
@@ -90,7 +96,7 @@ char convert_decimal_Binary(int num)
     /*Locating proper binary digit*/
     k = num >> c;
     /*Checking if first binary digit*/
-    if(i=0)
+    if(i==0)
     {
         /*Checking what is the proper binary digit*/
         if (k & 1)
@@ -129,7 +135,7 @@ returns:
 @res: the string representing the "chopped" location in the memory
 
 */
-char chop_string_for_address(char str)
+char *chop_string_for_address(char str[])
 {
   char res[5];/*Initializing the returned string*/
   /*creating the string*/
@@ -137,5 +143,6 @@ char chop_string_for_address(char str)
   res[1]=str[29] ;
   res[2]= str[30];
   res[3]=str[31] ;
+  res[4]= '\0';
   return res;/*return the desired address*/
 }
