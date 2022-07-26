@@ -1,4 +1,12 @@
 #include "Symbol.h"
+
+
+
+
+/* The method finds a Symbol and ret
+
+
+*/
 void *search_symbol( SymbolTable *symbol_table, char *name, IsEqual is_equal);
 {
 
@@ -39,16 +47,16 @@ Symbol *create_symbol(int ic, char *name)
 {
 
 
-    
+    /*Creating the new Symbol*/
+
     Symbol *symNew = malloc(sizeof(Symbol));
-    /*
-
-    convert IC to binary !!!! We need to crate method of transform in to binary!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    Symbol->ic= result of binary transformation;
+    /*Converting the instruction count to a binary number*/
+    char[32] binNum=convert_decimal_Binary(ic);
+    
+    symNew->ic= binNum;
     
     
-    */
+    
    /*copy the label name into the Symbol Name*/
     strcpy(sym->name,name);
     /*adding the Symbol to it's list*/
