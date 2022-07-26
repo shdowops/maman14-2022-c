@@ -1,16 +1,7 @@
 #include "linkedList.h"
-void *search_linked_list(LinkedList *linked_list, void *data, IsEqual is_equal)
-{
 
-    int i;
-    struct Node *current = linked_list->start;
-    for (i = 0; i < linked_list->size; i++)
-    {
-        if (is_equal(current->data, data))
-            return current->data;
-    }
-    return NULL;
-}
+
+
 
 bool add_value(LinkedList *linked_list, void *data)
 {
@@ -63,6 +54,12 @@ void delete_linked_list(LinkedList *linked_list)
     /**freeing the memory where the linked list struct is stored*/
     free(linked_list);
 }
+
+
+/*
+    The method creates a linked list and returns it
+
+*/
 
 LinkedList *create_linked_list()
 {

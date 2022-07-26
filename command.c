@@ -115,6 +115,9 @@ void add_dest(char *dest,  CommandDeclaration *comm_dec )
 */
 void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char *src, char *dest)
 {
+    
+    Symbol *sym_src;
+    Symbol *sym_dest;
     /*
         Checking Symbol is not of type 3. Type 3 reuqires no source or destination address
     */
@@ -122,15 +125,10 @@ void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char
     {
         /*
             Initializing the destination Symbol
-            since both type of commands (1 and 2) reuqire a destination address
-        
-        */
-        Symbol *sym_dest;
-        /*creating an is equal pointer*/
-        IsEqual *is_equal=NULL;
+            since both type of commands (1 and 2) reuqire a destination address*/
         
         /*Locating the source Symbol*/
-        Symbol *sym_dest = search_symbol(sym_tab, dest, is_equal);
+        sym_dest = search_symbol(sym_tab, dest);
         add_src(get_sym_address(Symbol),  CommandDeclaration *comm_dec );
 
             if(comm_dec->typ!=2)
@@ -138,12 +136,9 @@ void add_command_values(SymbolTable *sym_tab, CommandDeclaration *comm_dec, char
              {
                 /*
                 Initializing the source Symbol
-                 since command type 1 reuqires a source address
-                  */
-                Symbol *sym_src;
-                is_equal=NULL;
+                 since command type 1 reuqires a source address*/
                 /*Locating the source Symbol*/
-                Symbol *sym_src = search_symbol(sym_tab, src, is_equal);
+                sym_src = search_symbol(sym_tab, src);
                 sym_src=add_src(get_sym_address(Symbol),  CommandDeclaration *comm_dec )
              }
 

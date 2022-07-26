@@ -69,3 +69,13 @@ int IC, DC;
 */
 
 char *convert_decimal_Binary(int num);
+
+/** The method will recieve a string representing all digits for the bin number and will return according
+to memory location.
+input param:
+@str: the original number in binary form
+returns:
+@res: the string representing the "chopped" location in the memory
+
+*/
+char chop_string_for_address(char str);

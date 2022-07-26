@@ -121,16 +121,21 @@ char convert_decimal_Binary(int num)
 }
 
 
+/** The method will recieve a string representing all digits for the bin number and will return according
+to memory location.
+input param:
+@str: the original number in binary form
+returns:
+@res: the string representing the "chopped" location in the memory
 
-char chop_string(char str, int last, int first, int num)
-{!!!!!!!!!!!!!!!
-  char res[1];
-  /*Checking if needing the characters at the end*/
-  if(first=0)
-  {
-
-  }
-
-
-
+*/
+char chop_string_for_address(char str)
+{
+  char res[5];/*Initializing the returned string*/
+  /*creating the string*/
+  res[0]=str[28] ;
+  res[1]=str[29] ;
+  res[2]= str[30];
+  res[3]=str[31] ;
+  return res;/*return the desired address*/
 }

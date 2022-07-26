@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include <linkedList.h>
 
-typedef bool *IsEqual(void *data, void *parameter);
 
 typedef struct SymbolTable;
 {
@@ -36,7 +35,3 @@ void delete_Symbol_Table(SymbolTable *symbol_table);
  *  @data: The data to insert
  */
 bool add_value(SymbolTable *symbol_table, void *data);
-
-/**Searches if the data already exists in the linked list*/
-void *search_symbol_table(SymbolTable *symbol_table, void *data, IsEqual is_equal);
-#endif

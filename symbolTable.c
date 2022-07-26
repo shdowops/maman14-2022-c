@@ -1,12 +1,6 @@
 
 #include "symbolTable.h"
-void *search_symbol_table(SymbolTable *symbol_table, void *data, IsEqual is_equal)
-{
 
-    int i;
-    struct linked_list = symbol_table->linkedList;
-    return search_linked_list(linked_list, data, is_equal);
-}
 
 bool add_value(SymbolTable *symbol_table, void *data)
 {
