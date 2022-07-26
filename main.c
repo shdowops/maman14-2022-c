@@ -8,7 +8,7 @@ int main(int argc, const char *argv[])
     /*Check if a file name specified in cli*/
     if (argc == 1)
     {
-        printf("No file specified for compiler\n");
+        printf(NO_FILE_SPECIFIED);
         return 1;
     }
     /*At least one file in user input*/
@@ -21,7 +21,7 @@ int main(int argc, const char *argv[])
 
         if (fptr == NULL)
         {
-            printf("Unable to open the file: %s\n", filename);
+            printf(FILENOTFOUND, filename);
             continue;
         }
         else

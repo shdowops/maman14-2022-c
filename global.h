@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include "error_handling.h"
 
 
 /*
