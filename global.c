@@ -69,6 +69,12 @@ bool isDataSymbol(char *line)
 }
 
 
+char *getEntry(char * entryline)
+{
+  char * token = strtok(entryline, LINE_SPACE);
+  token = strtok(NULL, LINE_SPACE);
+  return token;
+}
 
 
 /**

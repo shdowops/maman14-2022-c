@@ -9,6 +9,7 @@
 #define STRING ".string"
 #define STRUCT ".struct"
 #define LABLEMARK ":"
+#define LINE_SPACE " "
 #define MAX_LINE_LENGTH 81
 #define MAX_LABLE_LENGTH 30
 #define START_OF_LINE 0
@@ -53,6 +54,11 @@ bool isEmptyLine(char *line);
 Description: Check if the line is comment - true, otherwise false.
 */
 bool isComment(char *line);
+
+/*
+Description: get the entry label.
+*/
+char *getEntry(char * entryline);
 
 /*
 Description: trim spaces from the line, return the trimmed string.

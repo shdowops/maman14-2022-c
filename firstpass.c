@@ -5,6 +5,7 @@ void firstpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], *trimmedline;
     bool is_label, is_error;
+    
     FILE *processedfile = fopen(filename, "r");
     IC = DC = 0;
     is_label = is_error = false;

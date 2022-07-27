@@ -4,6 +4,7 @@ void secondpass(char * filename)
 {
     char line[MAX_LINE_LENGTH], *trimmedline;
     bool is_error;
+    
     FILE *processedfile = fopen(filename, "r");
     IC = 0;
     is_error = false;
@@ -26,8 +27,13 @@ void secondpass(char * filename)
         /* is entry */
 
         if(isEntry(trimmedline))
+        {
+            char * entry = getEntry(trimmedline);
+            if(entry == NULL)
+                printf("Error - empty entry statement\n");
         /* insert entry to entry symbol table */
             continue;
+        }
         
         /* finish encoding operands */
         /* update IC -> IC + L */
