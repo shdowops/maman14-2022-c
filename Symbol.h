@@ -3,7 +3,6 @@
 #ifndef SYMBOL_H /*!!!!!!!!!!!!!*/
 #define SYMBOL_H /*!!!!!!!!!!!!!*/
 #include <symbolTable.h>
-typedef bool *IsEqual(void *data, void *parameter);
 
 typedef struct Symbol
 {

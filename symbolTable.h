@@ -11,16 +11,16 @@
 #include <linkedList.h>
 
 
-typedef struct SymbolTable;
+typedef struct SymbolTable
 {
     linkedList *linked_list;
-} Node;
+} SymbolTable;
 
 
 /**
  * Creates a Symbol Table
  */
-symbolTable *create_symbol_table();
+SymbolTable *create_symbol_table();
 
 /**
  * deletes a given Symbol Table
