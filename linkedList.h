@@ -35,7 +35,7 @@ void delete_linked_list(LinkedList *linked_list);
  *  @linked_list: The target linked list
  *  @data: The data to insert
  */
-bool add_value(LinkedList *linked_list, void *data);
+bool add_value_linked(LinkedList *linked_list, void *data);
 
 /**Searches if the data already exists in the linked list*/
 void *search_linked_list(LinkedList *linked_list, void *data, IsEqual is_equal);

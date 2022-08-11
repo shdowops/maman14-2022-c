@@ -4,7 +4,7 @@
 
 bool add_value(SymbolTable *symbol_table, void *data)
 {
-    return add_value(symbol_table->linked_list, data);
+    return add_value_linked(symbol_table->linked_list, data);
 }
 
 void delete_Symbol_Table(SymbolTable *symbol_table)
@@ -13,7 +13,7 @@ void delete_Symbol_Table(SymbolTable *symbol_table)
     free(symbol_table);
 }
 
-LinkedList *create_symbol_table()
+SymbolTable *create_symbol_table()
 {
     SymbolTable *resTable = malloc(sizeof(SymbolTable));
     LinkedList *result = malloc(sizeof(LinkedList));

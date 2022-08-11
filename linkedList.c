@@ -3,7 +3,7 @@
 
 
 
-bool add_value(LinkedList *linked_list, void *data)
+bool add_value_linked(LinkedList *linked_list, void *data)
 {
     Node *newNode;
     if (NULL == linked_list)
