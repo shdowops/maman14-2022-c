@@ -95,7 +95,7 @@ bool isComment(char *line);
 Description: get the entry label.
 */
 char *getEntry(char *entryline);
-
+Command
 /*
 Description: trim spaces from the line, return the trimmed string.
 */
@@ -115,4 +115,10 @@ bool isKeyword(char *line);
 Description: check if it's a register.
 */
 bool isRegister(char *line);
+
+/*
+Description: check if it's a command.
+*/
+bool isCommand(char *line);
+
 #endif

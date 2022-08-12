@@ -1,5 +1,5 @@
 #include "global.h"
-
+#include "error_handling.h"
 char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
@@ -161,6 +161,86 @@ bool check_opcode(char *line)
   printf("Checking opcode");
   return true;
 }
+
+
+bool isCommand(char *line)
+{
+  int kind;
+  int i;
+  int tokNum;
+  char * tok;
+  tok = strtok(line,LINE_SPACE);
+  kind = -1;
+  /*Checking if command is type 2 operand*/
+  for(i=0;i<5;i++)
+  {
+    if(strcmp(tok,TwoOperandCmd[i])==0)
+    {
+      kind=2;
+      tok=strtok(NULL, LINE_SPACE);
+      tok=strtok(tok,ARGUMENT_SEPARATOR);
+      if(numOfTokens(tok)!=2)
+      {
+        alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+      }
+    }
+  }
+  /*Checking if command is type 1 operand*/
+  for(i=0;i<9;i++)
+  {
+    if(strcmp(tok,SingleOperandCmd[i])==0)
+    {
+      kind=1;
+      tok=strtok(NULL, LINE_SPACE);
+      tok=strtok(tok,ARGUMENT_SEPARATOR);
+      if(numOfTokens(tok)==2)
+      {
+        alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+      }
+      if(numOfTokens(tok)==0)
+      {
+        alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+      }
+    }
+  }
+  /*Checking if command is type 0 operand*/
+  for(i=0;i<2;i++)
+  {
+    if(strcmp(tok,NoOperandCmd[i])==0)
+    {
+      kind=0;
+      tok=strtok(NULL, LINE_SPACE);
+      tok=strtok(tok,ARGUMENT_SEPARATOR);
+      if(numOfTokens(tok)!==0)
+      {
+        alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+      }
+    }
+  }
+  if(kind=-1)
+  {
+    alertError(ER_NOT_A_COMMAND)
+  }
+}
+
+/*Assisting function for the isCommand Method.
+ *This method checks how many operands there are in the line
+ */
+int numOfTokens(char * tok)
+{
+   int count = 0;
+   /* walk through other tokens */
+   while( token != NULL ) 
+   {
+      count ++;
+      token = strtok(NULL, s);
+   }
+  return count;
+}
+
+
+
+
 
 /**
  The method recieves an integer number and converts it into binary and returns the binary number as a String.
