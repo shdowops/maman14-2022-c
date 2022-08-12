@@ -6,7 +6,7 @@ extern Symbol *head, *tail;
 
 void firstpass(char *filename)
 { 
-    char line[MAX_LINE_LENGTH], trimmedline, label[MAX_LABEL_LENGTH];
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH];
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
@@ -26,7 +26,8 @@ void firstpass(char *filename)
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
         ++linenumber;
-        trimmedline = trim(line);
+        strcpy(trimmedline,trim(line));
+        /*trimmedline = trim(line);*/
         if (isEmptyLine(trimmedline) || isComment(trimmedline))
             continue;
 
@@ -37,8 +38,8 @@ void firstpass(char *filename)
         if ((is_data = isDataSymbol(trimmedline)))
             if (is_label)
             {
-                printf("Data Symbol + label\n");
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
+
                 continue;
             }
 
@@ -46,19 +47,16 @@ void firstpass(char *filename)
         if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline)))
             if (is_extern)
             {
-                printf("It is extern!\n");
                  no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
                 continue;
             }
 
         is_code = true;
-
         if (is_label)
         {
-            printf("Inside label + Command\n");
             no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
             /* insert to symbol as code with IC value*/
-
+            no_error &= check_opcode(trimmedline);
             IC++;
         }
         /* check instruction, if not exist, add error. */
