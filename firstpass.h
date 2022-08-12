@@ -7,5 +7,5 @@
 Description: Run the first pass on the expanded file
 */
 void firstpass(char *filename);
-
+void updateData(Symbol *head);
 #endif

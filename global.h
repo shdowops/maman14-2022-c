@@ -7,6 +7,7 @@
 #define EXTERN ".extern"
 #define ENTRY ".entry"
 #define DATA ".data"
+#define COMMENT ';'
 #define STRING ".string"
 #define STRUCT ".struct"
 #define LABELMARK ":"
@@ -24,6 +25,8 @@
 #include "error_handling.h"
 #include "symbol.h"
 
+long linenumber;
+
 /*
 Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",
          "g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v",
@@ -32,7 +35,7 @@ Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",
 /*
 Description: check that the given label is legit.
 */
-bool check_label(char *label);
+bool check_label(char *temp, char *label);
 /*
 Description: check if there is a lable in line
              return true if it does, false otherwise.
@@ -56,6 +59,21 @@ Description: check if lines contains data string or struct symbol
              True if it does, false otherwise.
 */
 bool isDataSymbol(char *line);
+
+/*
+Description: check if string contains .data
+*/
+bool isData(char *line);
+
+/*
+Description: check if string contains .string
+*/
+bool isString(char *line);
+
+/*
+Description: check if string contains .struct
+*/
+bool isStruct(char *line);
 
 /*
 Description: check if line contains data declaration

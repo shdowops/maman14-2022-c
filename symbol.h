@@ -12,23 +12,30 @@ typedef struct Symbol
     bool is_Data;
     bool is_Entry;
     bool is_Extern;
-    void *data;
+    char *data;
     char **binarydata;
     struct Symbol *next;
 } Symbol;
 
-Symbol *head;
+typedef struct Data
+{
+    char *name;
+    long address;
+    
+} Data;
+
+Symbol *head, *tail;
 
 /**
- * 
- * @param 
+ *
+ * @param
  * return:
  * pointer to newly created Symbol
  */
 
 /**
  * @brief The Method creates a new symbol based on the params that it recieves.
- * 
+ *
  * @param head The beginning of the list
  * @param line The line to examine
  * @param IC  The current instruction count
@@ -39,22 +46,20 @@ Symbol *head;
  * @return true if symbol succesfully added to the table.
  * @return false when an error occured.
  */
-bool add_symbol(char* line, char* label, bool is_Code, bool is_Data, bool is_Entry, bool is_Extern);
-
+bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Entry, bool is_Extern);
 
 /**
  * Print the symbol list
- * 
+ *
  */
 void print_symbol(Symbol *head);
 
-
 /**
- * @brief 
- * 
+ * @brief
+ *
  * @param line Trimmed line after command, data, struct or string.
  * @return int length of the command
  */
-int check_length(char * line);
+int check_length(char *line);
 
 #endif

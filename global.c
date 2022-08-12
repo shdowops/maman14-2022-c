@@ -5,46 +5,54 @@ char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
 
-bool check_label(char *label)
+char *TwoOperandCmd[] = {"mov","cmp","add","sub","lea"};
+
+char *SingleOperandCmd[] = {"not","clr","inc","dec","jmp","bne","get","prn","jsr"};
+
+char *NoOperandCmd[] ={"rts", "hlt"};
+
+bool check_label(char *labeltocheck, char *labeltosave)
 {
+  char  *temp = labeltocheck;
   /*Label not starting with alpha numeric character*/
-  if (!isalpha(label[0])) 
+  if (!isalpha(temp[0]))
   {
     printf("Label not starting with alphanumeric\n");
     return false;
   }
 
   /*Label is longer than 30 characters*/
-  if (strlen(label) > MAX_LABEL_LENGTH) 
+  if (strlen(temp) > MAX_LABEL_LENGTH)
   {
     printf("Too long label, max allowed is 30 chars.\n");
     return false;
   }
 
   /*Label is a keyword or register*/
-  if (isKeyword(label) || isRegister(label)) 
+  if (isKeyword(temp) || isRegister(temp))
   {
     printf("Label is a keyword or a register.\n");
     return false;
   }
 
   /*Label contains space before colon sign*/
-  if (isspace(label[strlen(label) - 1]))
+  if (isspace(temp[strlen(temp) - 1]))
   {
     printf("There is a space before the colon in label declaration\n");
     return false;
   }
 
   /*Label is not alphanumeric*/
-  while (*(label + 1) != '\0')
+  while (*(temp + 1) != '\0')
   {
-    if (!isalnum(*label))
+    if (!isalnum(*temp))
     {
       printf("Label is not alpha numeric\n");
       return false;
     }
-    label++;
+    temp++;
   }
+  strcpy(labeltosave, labeltocheck);
   return true;
 }
 
@@ -56,7 +64,8 @@ bool isLabel(char *line, char *label)
   if (strcmp(line, temp) == 0) /*No label found*/
     return false;
 
-  return check_label(temp);
+  line = strtok(NULL,LABELMARK);
+  return check_label(temp, label);
 }
 
 bool isEmptyLine(char *line)
@@ -73,7 +82,7 @@ bool isEmptyLine(char *line)
 
 bool isComment(char *line)
 {
-  return (line[START_OF_LINE] == ';' || line == NULL) ? true : false;
+  return (line[START_OF_LINE] == COMMENT || line == NULL) ? true : false;
 }
 
 char *trim(char *line)
@@ -105,12 +114,22 @@ bool isExtern(char *line)
 
 bool isDataSymbol(char *line)
 {
-  return (contains(line,DATA)||contains(line,STRING)||contains(line,STRUCT));
+  return (isData(line) || isString(line) || isStruct(line));
 }
 
-bool contains(char * line, char *data)
+bool isData(char *line)
 {
-  return strstr(line, data);
+  return strstr(line, DATA);
+}
+
+bool isString(char *line)
+{
+  return strstr(line, STRING);
+}
+
+bool isStruct(char *line)
+{
+  return strstr(line, STRUCT);
 }
 
 bool isKeyword(char *line)

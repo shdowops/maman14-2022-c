@@ -43,5 +43,7 @@ void secondpass(char * filename)
     if(is_error)
         /*print error*/
         return;
+
+    printf("Finito\n");
     /* save files */
 }
