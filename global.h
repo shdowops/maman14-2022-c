@@ -101,6 +101,11 @@ Description: trim spaces from the line, return the trimmed string.
 char *trim(char *line);
 
 /*
+Description: check if opcode exists.
+*/
+bool check_opcode(char *line);
+
+/*
 Description: check if label is keyword
 */
 bool isKeyword(char *line);

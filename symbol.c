@@ -47,8 +47,6 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
 void print_symbol(Symbol *head)
 {
-    if (head == NULL)
-        printf("Not chocolate\n");
     while (head != NULL)
     {
         printf("Symbol: \n");

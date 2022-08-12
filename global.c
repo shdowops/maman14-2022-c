@@ -58,13 +58,15 @@ bool check_label(char *labeltocheck, char *labeltosave)
 
 bool isLabel(char *line, char *label)
 {
+  char *secondpart;
   char *temp = (char *)malloc(sizeof(char) * strlen(line));
   strcpy(temp, line);
   temp = strtok(temp, LABELMARK);
   if (strcmp(line, temp) == 0) /*No label found*/
     return false;
 
-  line = strtok(NULL,LABELMARK);
+  secondpart = trim(strtok(NULL,LABELMARK));
+  strcpy(line,secondpart);
   return check_label(temp, label);
 }
 
