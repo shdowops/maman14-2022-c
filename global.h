@@ -25,7 +25,8 @@
 #include "error_handling.h"
 #include "symbol.h"
 
-long linenumber;
+extern long linenumber;
+extern char *filename;
 
 /*
 Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",

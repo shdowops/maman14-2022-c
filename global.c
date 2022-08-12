@@ -17,28 +17,28 @@ bool check_label(char *labeltocheck, char *labeltosave)
   /*Label not starting with alpha numeric character*/
   if (!isalpha(temp[0]))
   {
-    printf("Label not starting with alphanumeric\n");
+    alertError(ER_LABEL_NOT_FIRST_ALPHA_NUMERIC);
     return false;
   }
 
   /*Label is longer than 30 characters*/
   if (strlen(temp) > MAX_LABEL_LENGTH)
   {
-    printf("Too long label, max allowed is 30 chars.\n");
+   alertError(ER_LABEL_TOO_LONG);
     return false;
   }
 
   /*Label is a keyword or register*/
   if (isKeyword(temp) || isRegister(temp))
   {
-    printf("Label is a keyword or a register.\n");
+    alertError(ER_LABEL_NAME_ILLEGAL);
     return false;
   }
 
   /*Label contains space before colon sign*/
   if (isspace(temp[strlen(temp) - 1]))
   {
-    printf("There is a space before the colon in label declaration\n");
+    alertError(ER_LABEL_SPACE);
     return false;
   }
 
@@ -47,7 +47,7 @@ bool check_label(char *labeltocheck, char *labeltosave)
   {
     if (!isalnum(*temp))
     {
-      printf("Label is not alpha numeric\n");
+      alertError(ER_LABEL_ALPHA);
       return false;
     }
     temp++;

@@ -1,7 +1,7 @@
 #include "firstpass.h"
 
 long IC, DC;
-extern long linenumber;
+long linenumber;
 extern Symbol *head, *tail;
 
 void firstpass(char *filename)
@@ -19,7 +19,7 @@ void firstpass(char *filename)
     if (processedfile == NULL)
     {
         /* Add error unable to open file*/
-        printf("Unable to open file %s\n", filename);
+        alertFileError(ER_OPEN_FILE);
         return;
     }
 

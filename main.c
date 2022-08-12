@@ -8,7 +8,7 @@ int main(int argc, const char *argv[])
     /*Check if a file name specified in cli*/
     if (argc == 1)
     {
-        printf(NO_FILE_SPECIFIED);
+        alertFileError(NO_FILE_SPECIFIED);
         return 1;
     }
     /*At least one file in user input*/
@@ -21,7 +21,7 @@ int main(int argc, const char *argv[])
 
         if (fptr == NULL)
         {
-            printf(FILENOTFOUND, filename);
+            alertFileError(FILENOTFOUND);
             continue;
         }
         else
