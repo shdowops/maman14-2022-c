@@ -182,6 +182,7 @@ bool isCommand(char *line)
       if(numOfTokens(tok)!=2)
       {
         alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+        return false;
       }
     }
   }
@@ -196,10 +197,12 @@ bool isCommand(char *line)
       if(numOfTokens(tok)==2)
       {
         alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+        return false;
       }
       if(numOfTokens(tok)==0)
       {
         alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+        return false;
       }
     }
   }
@@ -214,13 +217,16 @@ bool isCommand(char *line)
       if(numOfTokens(tok)!==0)
       {
         alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+        return false;
       }
     }
   }
   if(kind=-1)
   {
     alertError(ER_NOT_A_COMMAND)
+    return false;
   }
+  return true;
 }
 
 /*Assisting function for the isCommand Method.
