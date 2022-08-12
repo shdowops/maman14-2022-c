@@ -1,16 +1,63 @@
 #include "global.h"
 
-bool isLabel(char *line)
-{
-  char *temp = (char *)malloc(sizeof(char) * strlen(line));
-  strcpy(temp, line);
-  temp = strtok(temp, LABLEMARK);
-  if (strcmp(line, temp) == 0)
-    return false;
+char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
+char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
+                                   ".data", ".string", ".extern", ".entry", ".struct"};
+
+bool check_label(char *label)
+{
+  /*Label not starting with alpha numeric character*/
+  if (!isalpha(label[0])) 
+  {
+    printf("Label not starting with alphanumeric\n");
+    return false;
+  }
+
+  /*Label is longer than 30 characters*/
+  if (strlen(label) > MAX_LABEL_LENGTH) 
+  {
+    printf("Too long label, max allowed is 30 chars.\n");
+    return false;
+  }
+
+  /*Label is a keyword or register*/
+  if (isKeyword(label) || isRegister(label)) 
+  {
+    printf("Label is a keyword or a register.\n");
+    return false;
+  }
+
+  /*Label contains space before colon sign*/
+  if (isspace(label[strlen(label) - 1]))
+  {
+    printf("There is a space before the colon in label declaration\n");
+    return false;
+  }
+
+  /*Label is not alphanumeric*/
+  while (*(label + 1) != '\0')
+  {
+    if (!isalnum(*label))
+    {
+      printf("Label is not alpha numeric\n");
+      return false;
+    }
+    label++;
+  }
   return true;
 }
 
+bool isLabel(char *line, char *label)
+{
+  char *temp = (char *)malloc(sizeof(char) * strlen(line));
+  strcpy(temp, line);
+  temp = strtok(temp, LABELMARK);
+  if (strcmp(line, temp) == 0) /*No label found*/
+    return false;
+
+  return check_label(temp);
+}
 
 bool isEmptyLine(char *line)
 {
@@ -24,12 +71,10 @@ bool isEmptyLine(char *line)
   return true;
 }
 
-
 bool isComment(char *line)
 {
   return (line[START_OF_LINE] == ';' || line == NULL) ? true : false;
 }
-
 
 char *trim(char *line)
 {
@@ -44,38 +89,54 @@ char *trim(char *line)
   return line;
 }
 
-
 bool isEntry(char *line)
 {
-  if(strstr(line, ENTRY))
+  if (strstr(line, ENTRY))
     return true;
   return false;
 }
-
 
 bool isExtern(char *line)
 {
-  if(strstr(line,EXTERN))
+  if (strstr(line, EXTERN))
     return true;
   return false;
 }
-
 
 bool isDataSymbol(char *line)
 {
-  if(strstr(line, DATA) || strstr(line, STRING) || strstr(line, STRUCT))
-    return true;
+  return (contains(line,DATA)||contains(line,STRING)||contains(line,STRUCT));
+}
+
+bool contains(char * line, char *data)
+{
+  return strstr(line, data);
+}
+
+bool isKeyword(char *line)
+{
+  int i;
+  for (i = 0; i < NUM_OF_KEYWORDS; i++)
+    if (strcmp(line, Keywords[i]) == 0)
+      return true;
   return false;
 }
 
-
-char *getEntry(char * entryline)
+bool isRegister(char *line)
 {
-  char * token = strtok(entryline, LINE_SPACE);
+  int i;
+  for (i = 0; i < NUM_OF_REGISTERS; i++)
+    if (strcmp(line, Registers[i]) == 0)
+      return true;
+  return false;
+}
+
+char *getEntry(char *entryline)
+{
+  char *token = strtok(entryline, LINE_SPACE);
   token = strtok(NULL, LINE_SPACE);
   return token;
 }
-
 
 /**
  The method recieves an integer number and converts it into binary and returns the binary number as a String.
@@ -83,56 +144,57 @@ char *getEntry(char * entryline)
   @num: the number that will be converted to binary.
   returns
   @res: the string which is the binary number.
-*/
 
-char * convert_decimal_Binary(int num)
+
+char *convert_decimal_Binary(int num)
 {
-  
-  int c, k;/*Initializing variables to find the correct binary digit*/
-  char res, chTwo;/* Initializing the String which will contain the binary number*/
-  /*Initializing the charachters for creating the binary number*/
-  char chOne ='1';
-  char chZero = '0';
-  
-  int i=0;/*Counter for identifying if it is the first binary digit*/
 
-  /*For loop to find the proper binary digit*/
+  int c, k;        Initializing variables to find the correct binary digit
+  char res, chTwo; Initializing the String which will contain the binary number
+
+  Initializing the charachters for creating the binary number
+  char chOne = '1';
+  char chZero = '0';
+
+  int i = 0; Counter for identifying if it is the first binary digit
+
+    For loop to find the proper binary digit
   for (c = 31; c >= 0; c--)
   {
-    /*Locating proper binary digit*/
+    Locating proper binary digit
     k = num >> c;
-    /*Checking if first binary digit*/
-    if(i==0)
+    Checking if first binary digit
+    if (i == 0)
     {
-        /*Checking what is the proper binary digit*/
-        if (k & 1)
-        {
-           res='1';
-        }
-        else
-        {
-           res='0';
-        }
-        
-      i=1;/*Updating that first binary digit had been found*/
-    }
-    /*If this is not the first binary digit*/
-    else
-    {
-      /*Checking what is the proper binary digit*/
+      Checking what is the proper binary digit
       if (k & 1)
       {
-        strncat(res, &chOne, 1);/*Adding the binary digit to the binary number*/
+        res = '1';
       }
       else
-        {strncat(res, &chTwo, 1);/*Adding the binary digit to the binary number*/
+      {
+        res = '0';
       }
-     }
-  }/*End of for loop*/
-  return res; /*Return the binary number*/
+
+      i = 1; Updating that first binary digit had been found
+    }
+    If this is not the first binary digit
+    else
+    {
+      Checking what is the proper binary digit
+      if (k & 1)
+      {
+        strncat(res, &chOne, 1); Adding the binary digit to the binary number
+      }
+      else
+      {
+        strncat(res, &chTwo, 1); Adding the binary digit to the binary number
+      }
+    }
+  }           End of for loop
+  return res; Return the binary number
 }
-
-
+*/
 /** The method will recieve a string representing all digits for the bin number and will return according
 to memory location.
 input param:
@@ -140,15 +202,15 @@ input param:
 returns:
 @res: the string representing the "chopped" location in the memory
 
-*/
+
 char *chop_string_for_address(char str[])
 {
-  char res[5];/*Initializing the returned string*/
-  /*creating the string*/
-  res[0]=str[28] ;
-  res[1]=str[29] ;
-  res[2]= str[30];
-  res[3]=str[31] ;
-  res[4]= '\0';
-  return res;/*return the desired address*/
-}
+  char res[5]; Initializing the returned string
+  creating the string
+  res[0] = str[28];
+  res[1] = str[29];
+  res[2] = str[30];
+  res[3] = str[31];
+  res[4] = '\0';
+  return res; return the desired address
+}*/

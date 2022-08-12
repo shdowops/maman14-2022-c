@@ -4,6 +4,7 @@
 #define LABEL_ALREADY_EXIST "The label %s previously declared.\n"
 #define INSTRUCTION_NOT_EXIST "No such instraction %s.\n"
 #define NO_FILE_SPECIFIED "No file specified for the compiler.\n"
+#define LABEL_ALREADY_EXISTS "Label already exists.\n"
 
 void add_error(char *err);
 #endif
