@@ -14,7 +14,7 @@ int main(int argc, const char *argv[])
     /*At least one file in user input*/
     for (i = 1; i < argc; i++)
     {
-        char *filename = malloc(strlen(argv[i]) + 1);
+        filename = malloc(strlen(argv[i]) + 1);
         strcpy(filename, argv[i]);
         strcat(filename, ORIGINAL_EXT);
         fptr = fopen(filename, "r");

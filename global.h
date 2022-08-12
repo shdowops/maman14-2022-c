@@ -3,7 +3,7 @@
 #define ORIGINAL_EXT ".as"
 #define EXPANDED_EXT ".am"
 #define SEPARATOR "."
-#define ARGUMENT_SEPARATOR ","
+#define ARGUMENT_SEPARATOR " ,."
 #define EXTERN ".extern"
 #define ENTRY ".entry"
 #define DATA ".data"

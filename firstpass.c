@@ -6,14 +6,13 @@ extern Symbol *head, *tail;
 
 void firstpass(char *filename)
 { 
-    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH];
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
     IC = 100;
     DC = linenumber = 0;
     no_error = true;
-    is_label = is_data = is_code = is_entry = is_extern = false;
 
     /*read next line from file*/
     if (processedfile == NULL)
@@ -25,21 +24,33 @@ void firstpass(char *filename)
 
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
+        init_label(label);
+        is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
         strcpy(trimmedline,trim(line));
-        /*trimmedline = trim(line);*/
         if (isEmptyLine(trimmedline) || isComment(trimmedline))
             continue;
 
         is_label = isLabel(trimmedline, label); /*is it a label? */
-
 
         /*check if .data? .string? .struct? */
         if ((is_data = isDataSymbol(trimmedline)))
             if (is_label)
             {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
-
+                token = strtok(trimmedline,ARGUMENT_SEPARATOR);
+                token = strtok(NULL,ARGUMENT_SEPARATOR);
+                printf("trimmed line:%s\n",token);
+                if(isData(trimmedline))
+                {
+                    printf("Calculating numbers\n");
+                    /*calculateNumbers()*/
+                }
+                else if (isString(trimmedline))
+                {
+                    printf("Calculating string\n");
+                    continue;
+                }
                 continue;
             }
 
@@ -52,13 +63,10 @@ void firstpass(char *filename)
             }
 
         is_code = true;
+        /* insert to symbol as code with IC value*/
         if (is_label)
-        {
             no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
-            /* insert to symbol as code with IC value*/
-            no_error &= check_opcode(trimmedline);
-            IC++;
-        }
+
         /* check instruction, if not exist, add error. */
 
         /*check operands and count them*/
@@ -66,27 +74,28 @@ void firstpass(char *filename)
         /* IC --> IC +L */
     }
     /* Finished reading the file*/
-    print_symbol(head);
     if (!no_error)
         return;
-
     /* update symbol list data adding the right IC */
     updateData(head);
-    /*   while(headptr != NULL)
-       {
-           headptr->dc+=IC;
-           headptr=headptr->next;
-       }
-   */
+    print_symbol(head);
     /*Start second pass*/
     fclose(processedfile);
-    secondpass(filename);
+    /*secondpass(filename);*/
+}
+
+void init_label(char *label)
+{
+    int i;
+    for(i=0;i<MAX_LABEL_LENGTH;i++)
+        label[i] = '\0';
 }
 
 void updateData(Symbol *head)
 {
      while (head != NULL)
     {
+        
         if (head->is_Data)
             head->address += IC;
         head = head->next;

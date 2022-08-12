@@ -1,23 +1,20 @@
 #include "global.h"
 
 char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
-
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
-
-char *TwoOperandCmd[] = {"mov","cmp","add","sub","lea"};
-
-char *SingleOperandCmd[] = {"not","clr","inc","dec","jmp","bne","get","prn","jsr"};
-
-char *NoOperandCmd[] ={"rts", "hlt"};
+char *TwoOperandCmd[] = {"mov", "cmp", "add", "sub", "lea"};
+char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "prn", "jsr"};
+char *NoOperandCmd[] = {"rts", "hlt"};
+char *filename;
 
 bool check_label(char *labeltocheck, char *labeltosave)
 {
-  char  *temp = labeltocheck;
+  char *temp = labeltocheck;
   /*Label not starting with alpha numeric character*/
   if (!isalpha(temp[0]))
   {
-    alertError(ER_LABEL_NOT_FIRST_ALPHA_NUMERIC);
+    alertError(ER_LABEL_NOT_FIRST_ALPHA);
     return false;
   }
 
@@ -65,8 +62,8 @@ bool isLabel(char *line, char *label)
   if (strcmp(line, temp) == 0) /*No label found*/
     return false;
 
-  secondpart = trim(strtok(NULL,LABELMARK));
-  strcpy(line,secondpart);
+  secondpart = trim(strtok(NULL, LABELMARK));
+  strcpy(line, secondpart);
   return check_label(temp, label);
 }
 
@@ -157,6 +154,12 @@ char *getEntry(char *entryline)
   char *token = strtok(entryline, LINE_SPACE);
   token = strtok(NULL, LINE_SPACE);
   return token;
+}
+
+bool check_opcode(char *line)
+{
+  printf("Checking opcode");
+  return true;
 }
 
 /**

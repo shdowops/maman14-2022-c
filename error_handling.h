@@ -3,8 +3,6 @@
 
 #include "global.h"
 
-
-
 /*File Errors*/
 #define ER_FAIL_CREATE_FILE	"Failure with creating file"
 #define ER_OPEN_FILE "could not open the file"
@@ -26,14 +24,12 @@
 #define ER_LABEL_NOT_DEFINED "Label is undefined"
 #define ER_LABEL_CONVERTION	"Cannot convert label address"
 #define ER_DATA_LABEL_INVALID ".data label contains an invalid number"
-#define ER_STRING_DECLARATION	"A space is required following a .string declaration"
+#define ER_STRING_DECLARATION "A space is required following a .string declaration"
 #define ER_DATA_DECLARATION	"A space is required following  .data declaration"
 #define ER_LABEL_IS_MISSING "A label is missing"
 #define ER_LABEL_KEYWORD "A label cannot have the same name as a keyword"
 #define ER_LABEL_REGISTER "A label cannot have the same name as a register"
-
-
-
+#define ER_LABEL_SPACE "Label contains space before colon"
 
 /*Instruction Errors*/
 #define ER_INSTRUCTION_NOT_EXIST "Instraction %s does not exist"
@@ -42,7 +38,7 @@
 #define ER_OPERANDS_OVERFLOW_IN_COMMAND "An overflow of operands in the command exists"
 #define ER_DESTINATION_OPERAND "Destination operand does not exist"
 #define ER_Source_OPERAND "Source operand does not exist"
-#define ER_STRING_DECLARATION ".string declaration is illegal" 
+/*#define ER_STRING_DECLARATION ".string declaration is illegal" */
 
 
 

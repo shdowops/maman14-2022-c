@@ -16,13 +16,29 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
         printf("Unable to allocate memory\n");
         return false;
     }
-
     symNew->name = labelname;
-    symNew->next = NULL;
-    symNew->address = IC;
+    symNew->is_Code = is_Code;
+    symNew->is_Data = is_Data;
     symNew->is_Entry = is_Entry;
     symNew->is_Extern = is_Extern;
     symNew->data = data;
+    symNew->next = NULL;
+
+    if(is_Data)
+    {
+        symNew->address=DC;
+        DC++;
+    }
+    else if(is_Code)
+    {
+        symNew->address=IC;
+        IC++;
+    }
+    else
+    {
+        symNew->address=0;
+    }
+    
 
     if (head == NULL)
     {
@@ -33,9 +49,9 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
     while (temp != NULL)
     {
-        if (strcmp(temp->name, symNew->name) == 0)
+        if (strcmp(temp->name, symNew->name) == 0 && !is_Extern)
         {
-            printf("Label already exists.\n");
+            alertError(ER_LABEL_ALREADY_EXISTS);
             return false;
         }
         temp = temp->next;
@@ -47,15 +63,16 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
 void print_symbol(Symbol *head)
 {
+
     while (head != NULL)
     {
-        printf("Symbol: \n");
-        printf("%s ", head->name);
-        printf("%ld ", head->address);
-        printf("%d ", head->is_Code);
-        printf("%d ", head->is_Data);
-        printf("%d ", head->is_Entry);
-        printf("%s ",head->data);
+        printf("name: %s ", head->name);
+        printf("address: %ld ", head->address);
+        printf("code: %d ", head->is_Code);
+        printf("is_data: %d ", head->is_Data);
+        printf("is_entry: %d ", head->is_Entry);
+        printf("is_extern: %d ", head->is_Extern);
+        printf("data: %s ",head->data);
         printf("\n");
         head = head->next;
     }
@@ -64,7 +81,7 @@ void print_symbol(Symbol *head)
 int check_length(char *line)
 {
     int length = 0;
-    char *token = strtok(line, ARGUMENT_SEPARATOR);
+    char *token = trim(strtok(NULL, ARGUMENT_SEPARATOR));
     while (token != NULL)
     {
         length++;
