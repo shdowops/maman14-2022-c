@@ -49,7 +49,7 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
     while (temp != NULL)
     {
-        if (strcmp(temp->name, symNew->name) == 0 && !is_Extern)
+        if (strcmp(temp->name, symNew->name) == 0 && !is_Extern && !labelname)
         {
             alertError(ER_LABEL_ALREADY_EXISTS);
             return false;

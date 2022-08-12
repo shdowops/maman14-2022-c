@@ -27,4 +27,12 @@ void init_label(char *label);
  * @param head The beginning of the Symbol list.
  */
 void updateData(Symbol *head);
+
+
+int checkNumbers(char * line);
+
+int checkString(char * line);
+
+int checkStruct(char * line);
+
 #endif

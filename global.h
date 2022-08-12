@@ -95,7 +95,6 @@ bool isComment(char *line);
 Description: get the entry label.
 */
 char *getEntry(char *entryline);
-Command
 /*
 Description: trim spaces from the line, return the trimmed string.
 */
@@ -121,4 +120,9 @@ Description: check if it's a command.
 */
 bool isCommand(char *line);
 
+
+/*Assisting function for the isCommand Method.
+ *This method checks how many operands there are in the line
+ */
+int numOfTokens(char *tok);
 #endif

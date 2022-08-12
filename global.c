@@ -21,7 +21,7 @@ bool check_label(char *labeltocheck, char *labeltosave)
   /*Label is longer than 30 characters*/
   if (strlen(temp) > MAX_LABEL_LENGTH)
   {
-   alertError(ER_LABEL_TOO_LONG);
+    alertError(ER_LABEL_TOO_LONG);
     return false;
   }
 
@@ -162,68 +162,66 @@ bool check_opcode(char *line)
   return true;
 }
 
-
 bool isCommand(char *line)
 {
   int kind;
   int i;
-  int tokNum;
-  char * tok;
-  tok = strtok(line,LINE_SPACE);
+  char *tok;
+  tok = strtok(line, LINE_SPACE);
   kind = -1;
   /*Checking if command is type 2 operand*/
-  for(i=0;i<5;i++)
+  for (i = 0; i < 5; i++)
   {
-    if(strcmp(tok,TwoOperandCmd[i])==0)
+    if (strcmp(tok, TwoOperandCmd[i]) == 0)
     {
-      kind=2;
-      tok=strtok(NULL, LINE_SPACE);
-      tok=strtok(tok,ARGUMENT_SEPARATOR);
-      if(numOfTokens(tok)!=2)
+      kind = 2;
+      tok = strtok(NULL, LINE_SPACE);
+      tok = strtok(tok, ARGUMENT_SEPARATOR);
+      if (numOfTokens(tok) != 2)
       {
-        alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+        alertError(ER_MISSING_OPERANDS_IN_COMMAND);
         return false;
       }
     }
   }
   /*Checking if command is type 1 operand*/
-  for(i=0;i<9;i++)
+  for (i = 0; i < 9; i++)
   {
-    if(strcmp(tok,SingleOperandCmd[i])==0)
+    if (strcmp(tok, SingleOperandCmd[i]) == 0)
     {
-      kind=1;
-      tok=strtok(NULL, LINE_SPACE);
-      tok=strtok(tok,ARGUMENT_SEPARATOR);
-      if(numOfTokens(tok)==2)
+      kind = 1;
+      tok = strtok(NULL, LINE_SPACE);
+      tok = strtok(tok, ARGUMENT_SEPARATOR);
+      if (numOfTokens(tok) == 2)
       {
-        alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+        alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
         return false;
       }
-      if(numOfTokens(tok)==0)
+      if (numOfTokens(tok) == 0)
       {
-        alertEror(ER_MISSING_OPERANDS_IN_COMMAND);
+        alertError(ER_MISSING_OPERANDS_IN_COMMAND);
         return false;
       }
     }
   }
   /*Checking if command is type 0 operand*/
-  for(i=0;i<2;i++)
+  for (i = 0; i < 2; i++)
   {
-    if(strcmp(tok,NoOperandCmd[i])==0)
+    if (strcmp(tok, NoOperandCmd[i]) == 0)
     {
-      kind=0;
-      tok=strtok(NULL, LINE_SPACE);
-      tok=strtok(tok,ARGUMENT_SEPARATOR);
-      if(numOfTokens(tok)!==0)
+      kind = 0;
+      tok = strtok(NULL, LINE_SPACE);
+      tok = strtok(tok, ARGUMENT_SEPARATOR);
+      if (numOfTokens(tok) != 0)
       {
-        alertEror(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+        alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
         return false;
       }
     }
   }
-  if(kind=-1)
+  if (kind == -1)
   {
-    alertError(ER_NOT_A_COMMAND)
+    alertError(ER_OPCODE_ILLEGAL);
     return false;
   }
   return true;
@@ -232,21 +230,17 @@ bool isCommand(char *line)
 /*Assisting function for the isCommand Method.
  *This method checks how many operands there are in the line
  */
-int numOfTokens(char * tok)
+int numOfTokens(char *tok)
 {
-   int count = 0;
-   /* walk through other tokens */
-   while( token != NULL ) 
-   {
-      count ++;
-      token = strtok(NULL, s);
-   }
+  int count = 0;
+  /* walk through other tokens */
+  while (tok != NULL)
+  {
+    count++;
+    tok = strtok(NULL, ARGUMENT_SEPARATOR);
+  }
   return count;
 }
-
-
-
-
 
 /**
  The method recieves an integer number and converts it into binary and returns the binary number as a String.

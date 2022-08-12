@@ -20,3 +20,4 @@ macro m2
 endmacro
 S1: .struct 8, "ab" 
 m2
+S2: .data 23

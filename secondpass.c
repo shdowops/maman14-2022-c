@@ -1,5 +1,6 @@
 #include "secondpass.h"
 extern long IC, DC;
+extern Symbol *head, *tail;
 void secondpass(char * filename)
 {
     char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
