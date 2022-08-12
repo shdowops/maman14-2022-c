@@ -1,20 +1,19 @@
 #include "firstpass.h"
 
-extern int IC, DC;
+long IC, DC;
+long linenumber;
 
 void firstpass(char *filename)
 {
-    char line[MAX_LINE_LENGTH], *trimmedline;
-    bool is_label, is_error;
+    extern Symbol *head;
+    Symbol *temp;
+    char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
+    bool is_label, is_error, is_data, is_code, is_entry, is_extern;
     FILE *processedfile = fopen(filename, "r");
-    IC = DC = 0;
-    is_label = is_error = false;
-    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-    SymbolTable labelTable=create_symbol_table();    /*Create Label Table*/
-    SymbolTable dataTable= create_symbol_table(); /*Create Data Table*/
-    Symbol label;/*Creating a label*/
-    Command newCom;/*Creating a command*/
-    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+    head = NULL;
+    IC = 100;
+    DC = linenumber = 0;
+    is_label = is_error = is_data = is_code = is_entry = is_extern = false;
 
     /*read next line from file*/
     if (processedfile == NULL)
@@ -23,79 +22,72 @@ void firstpass(char *filename)
         printf("Unable to open file %s\n", filename);
         return;
     }
-    
+
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
+        ++linenumber;
         trimmedline = trim(line);
         if (isEmptyLine(trimmedline) || isComment(trimmedline))
             continue;
 
-        /*it is label? */
-        is_label = isLabel(trimmedline);
+        is_label = isLabel(trimmedline, label); /*is it a label? */
 
         /*check if .data? .string? .struct? */
-        if (isDataSymbol(trimmedline))
+        if ((is_data = isDataSymbol(trimmedline)))
             if (is_label)
             {
-                printf("Data Symbol + lable\n");
-                /*insert tavit as data label with value of DC*/
-                /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-                label= create_symbol(DC,trimmedline);/*creating a new data Symbol*/
-                add_value(dataTable,dataSym);/*Adding a new data Symbol to the data table*/
-            /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
-                /*determine symboltype encode the memory*/
-                /*update DC */
+                printf("Data Symbol + label\n");
+                add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
                 continue;
             }
 
         /*if .extern? .entry? */
-        if (isEntry(trimmedline) || isExtern(trimmedline))
-            if (isExtern(trimmedline))
+        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline)))
+            if (is_extern)
             {
                 printf("It is extern!\n");
-                /*add external symbols (one or more) to symbol list without a value*/
+                add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
                 continue;
             }
 
-        /* if flag is label */
+        is_code = true;
+
+        printf("line=%s\n",trimmedline);
         if (is_label)
         {
-            printf("Inside label\n");
+            printf("Inside label + Command\n");
+            add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
             /* insert to symbol as code with IC value*/
-            /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-            /*Creating a new label*/
-            label=create_symbol(IC,trimmedline);
-            /*Adding label to label table*/
-            addvalue(labelTable,label);
-            /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
 
             IC++;
         }
 
         /* check instruction, if not exist, add error. */
-        /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        newCom=create_command(label, trimmedline);/*Creating the command and adding to labels*/
-        /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         /*check operands and count them*/
         /*build binary code of the instruction*/
         /* IC --> IC +L */
     }
     /* Finished reading the file*/
-
+    print_symbol(head);
     if (is_error)
         /* print errors */
         return;
 
-    /* update symbol list data adding the right IC
-        while(headptr != NULL)
-        {
-            headptr->dc+=IC;
-            headptr=headptr->next;
-        }
-    */
+    /* update symbol list data adding the right IC */
+    temp = head;
+    while (temp != NULL)
+    {
+        if (temp->is_Data)
+            temp->address += IC;
+        temp = temp->next;
+    }
+    /*   while(headptr != NULL)
+       {
+           headptr->dc+=IC;
+           headptr=headptr->next;
+       }
+   */
     /*Start second pass*/
     fclose(processedfile);
     secondpass(filename);

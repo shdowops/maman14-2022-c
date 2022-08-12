@@ -3,29 +3,41 @@
 #define ORIGINAL_EXT ".as"
 #define EXPANDED_EXT ".am"
 #define SEPARATOR "."
+#define ARGUMENT_SEPARATOR ","
 #define EXTERN ".extern"
 #define ENTRY ".entry"
 #define DATA ".data"
 #define STRING ".string"
 #define STRUCT ".struct"
-#define LABLEMARK ":"
+#define LABELMARK ":"
 #define LINE_SPACE " "
 #define MAX_LINE_LENGTH 81
-#define MAX_LABLE_LENGTH 30
+#define MAX_LABEL_LENGTH 30
 #define START_OF_LINE 0
+#define NUM_OF_REGISTERS 8
+#define NUM_OF_KEYWORDS 21
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include "error_handling.h"
+#include "symbol.h"
 
+/*
+Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",
+         "g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v",
+*/
 
+/*
+Description: check that the given label is legit.
+*/
+bool check_label(char *label);
 /*
 Description: check if there is a lable in line
              return true if it does, false otherwise.
 */
-bool isLabel(char *line);
+bool isLabel(char *line, char *label);
 
 /*
 Description: check if lines contains entry symbol
@@ -46,6 +58,11 @@ Description: check if lines contains data string or struct symbol
 bool isDataSymbol(char *line);
 
 /*
+Description: check if line contains data declaration
+*/
+bool contains(char *line, char *data);
+
+/*
 Description: Check if line contains only whitespace characters
 */
 bool isEmptyLine(char *line);
@@ -58,32 +75,20 @@ bool isComment(char *line);
 /*
 Description: get the entry label.
 */
-char *getEntry(char * entryline);
+char *getEntry(char *entryline);
 
 /*
 Description: trim spaces from the line, return the trimmed string.
 */
 char *trim(char *line);
 
-int IC, DC;
+/*
+Description: check if label is keyword
+*/
+bool isKeyword(char *line);
+
+/*
+Description: check if it's a register.
+*/
+bool isRegister(char *line);
 #endif
-
-
-/*The method recieves an integer number and converts it into binary and returns the binary number as a String.
-  input params:
-  @num: the number that will be converted to binary.
-  returns
-  @res: the string which is the binary number.
-*/
-
-char *convert_decimal_Binary(int num);
-
-/** The method will recieve a string representing all digits for the bin number and will return according
-to memory location.
-input param:
-@str: the original number in binary form
-returns:
-@res: the string representing the "chopped" location in the memory
-
-*/
-char *chop_string_for_address(char str[]);

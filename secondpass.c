@@ -1,8 +1,8 @@
 #include "secondpass.h"
-extern int IC, DC;
+extern long IC, DC;
 void secondpass(char * filename)
 {
-    char line[MAX_LINE_LENGTH], *trimmedline;
+    char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
     bool is_error;
     
     FILE *processedfile = fopen(filename, "r");
@@ -16,7 +16,7 @@ void secondpass(char * filename)
             continue;
 
         /* is label ?*/
-        if(isLabel(trimmedline))
+        if(isLabel(trimmedline, label))
             /*skip to next field*/
             continue;
 

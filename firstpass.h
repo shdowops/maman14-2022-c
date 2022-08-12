@@ -3,8 +3,6 @@
 #include "global.h"
 #include "secondpass.h"
 #include <stdbool.h>
-#include "symbolTable.h"
-#include "Symbol.h"
 /*
 Description: Run the first pass on the expanded file
 */
