@@ -1,11 +1,12 @@
 #include "global.h"
-char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+
+
+
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
 char *TwoOperandCmd[] = {"mov", "cmp", "add", "sub", "lea"};
 char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "prn", "jsr"};
 char *NoOperandCmd[] = {"rts", "hlt"};
-
 opcode opcodes[OPCODE_AMOUNT] = {
 { 0		,	"mov"	,"0000"	,	TWO_OPERANDS },
 { 1		,	"cmp"	,"0001"	,	TWO_OPERANDS },
@@ -392,10 +393,10 @@ bool checkStruct(char *line)
   @res: the string which is the binary number.
 */
 
-char *convert_decimal_Binary(int num)
+char *convert_decimal_Binary(long num)
 {
 
-  int c, k;         /*Initializing variables to find the correct binary digit*/
+  long c, k;         /*Initializing variables to find the correct binary digit*/
   char *res, chTwo; /*Initializing the String which will contain the binary number*/
 
   /*Initializing the charachters for creating the binary number*/
@@ -414,11 +415,11 @@ char *convert_decimal_Binary(int num)
       /*Checking what is the proper binary digit*/
       if (k & 1)
       {
-        *res = '1';
+        strcpy(res,"1");
       }
       else
       {
-        *res = '0';
+        strcpy(res,"0");
       }
 
       i = 1; /*Updating that first binary digit had been found*/

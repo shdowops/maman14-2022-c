@@ -37,11 +37,10 @@
 #include <ctype.h>
 #include "error_handling.h"
 #include "symbol.h"
-
+char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 extern long IC, DC;
 extern long linenumber;
 extern char *filename;
-
 typedef struct opcode{
 	int decimal;
 	char* name;
@@ -178,4 +177,8 @@ char* getopcode(char * line);
  *This method checks how many operands there are in the line
  */
 int numOfTokens(char *tok);
+
+
+char *convert_decimal_Binary(long num);
+
 #endif

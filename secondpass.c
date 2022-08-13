@@ -1,11 +1,12 @@
 #include "secondpass.h"
 extern long IC, DC;
 extern Symbol *head, *tail;
+char *Registers[NUM_OF_REGISTERS];
 void secondpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *trimmedline;
     bool is_error;
-    /* int kind;*/
+    int kind;
     bool no_error, is_data, is_code, is_entry, is_extern;
     FILE *ent_fptr, *ext_fptr, *obj_fptr;
     FILE *processedfile = fopen(filename, "r");
@@ -55,15 +56,16 @@ void secondpass(char *filename)
             if (isEmptyLine(trimmedline) || isComment(trimmedline))
                 continue;
 
-            is label ? if (isLabel(trimmedline, label))
+            if (isLabel(trimmedline, label))
 
-                           kind = 0;
+                kind = 0;
             if (isCommand(trimmedline, &kind))
             {
-                check instruction type if (kind != 0)
+                if (kind != 0)
                 {
                     char *tok;
-                    char * strWord;
+                    char *strWord;
+                    strWord= NULL;
                     tok = strtok(trimmedline, LINE_SPACE);
 
                     if (kind == 1)
@@ -71,35 +73,37 @@ void secondpass(char *filename)
                         if (isRegister(tok))
                         {
                             int j;
-                            char transRegister [] = {"0000","0001","0010","0011","0100","0101","0110","0111"}; 
+                            char *transRegister[8] = {"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111"};
                             for (j = 0; j < 8; j++)
                             {
-                                if(tok==Registers[j])
+                                if (strcmp(tok, Registers[j]) == 0)
                                 {
-                                    strWord==transRegister[j];
+                                    strcpy(strWord, transRegister[j]);
                                 }
                             }
-                                continue;
+                            continue;
                         }
                         else
                         {
-                            if (isLabel(tok))
+                            if (isLabel(trimmedline, tok))
                             {
-                                bool notFound=true;
-                                Symbol temp=head;
-                                while(temp->next!=NULL)
+                                bool notFound = true;
+                                Symbol *temp;
+                                temp = head;
+                                while (temp->next != NULL)
                                 {
-                                    if(temp->name!='\0')
+
+                                    if (strcmp(temp->name, "\0") != 0)
+                                    {
+                                        if (strcmp(tok, temp->name) == 0)
                                         {
-                                            if(strcmp(tok,temp->name)==0)
-                                            {
-                                                strWord=convert_decimal_Binary(temp->address);
-                                                notFound=false
-                                            }
+                                            strcpy(strWord, convert_decimal_Binary(temp->address));
+                                            notFound = false;
                                         }
-                                    temp=temp->next;
+                                    }
+                                    temp = temp->next;
                                 }
-                                if(notFound)
+                                if (notFound)
                                 {
                                     alertError(ER_LABEL_IS_MISSING);
                                 }
@@ -110,10 +114,11 @@ void secondpass(char *filename)
                             {
                                 if (isdigit(line[strlen(tok) - 1]))
                                 {
-                                    strWord=convert_decimal_Binary(tok);
+                                    long dummy;
+                                    dummy = strtol(tok, NULL, 0);
+                                    strcpy(strWord, convert_decimal_Binary(dummy));
                                     continue;
                                 }
-                                
                             }
                         }
                     }
@@ -138,11 +143,11 @@ void secondpass(char *filename)
         return;
 
     strtok(filename, SEPARATOR);
-    ent_fptr = fopen(strcat(filename, ENTRY_EXT),"wb");
-    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT),"wb");
-    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT),"wb");
+    ent_fptr = fopen(strcat(filename, ENTRY_EXT), "wb");
+    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT), "wb");
+    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT), "wb");
 
-    if(!ent_fptr || !ext_fptr || !obj_fptr )
+    if (!ent_fptr || !ext_fptr || !obj_fptr)
     {
         alertError(ER_OPEN_FILE);
         return;
@@ -160,11 +165,11 @@ void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr)
 }
 
 /*Translate to 32 bits*/
-char *translated(char line[], char res [2])
+char *translated(char line[], char res[2])
 {
     char first[5];
     char second[5];
-    
+
     int i;
     int numOne;
     int numTwo;
