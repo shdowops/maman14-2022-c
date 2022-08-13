@@ -48,7 +48,7 @@ bool check_label(char *labeltocheck, char *labeltosave)
     }
     temp++;
   }
-  if (labeltosave != NULL)
+  if (labeltosave)
     strcpy(labeltosave, labeltocheck);
   return true;
 }
@@ -150,29 +150,39 @@ bool isRegister(char *line)
 
 bool isStruct(char *line)
 {
+  char *token;
   char *temp = malloc(sizeof(line));
   strcpy(temp, line);
-  temp = strtok(temp, SEPARATOR);
-  temp = strtok(NULL, SEPARATOR);
-  if (*temp != STURCT_FIRST_ARG && *temp != STRUCT_SECOND_ARG)
+  token = strtok(temp, SEPARATOR);
+  token = strtok(NULL, SEPARATOR);
+  if(!token)
   {
-    alertError(ER_OUT_OF_BOUND_STRUCT);
+    free(temp);
     return false;
   }
 
+  if (*token != STURCT_FIRST_ARG && *token != STRUCT_SECOND_ARG)
+  {
+    free(temp);
+    alertError(ER_OUT_OF_BOUND_STRUCT);
+    return false;
+  }
+  free(temp);
   return true;
 }
 
 bool isNumber(char *line)
 {
-  printf("line=%s\n", line);
+  char *token;
   char *temp = malloc(sizeof(line));
   strcpy(temp, line);
-  temp = strtok(temp, NUMBERSTART);
-  printf("temp=%s\n", temp);
-  if (strcmp(line, temp) == 0)
+  token = strtok(temp, NUMBERSTART);
+  if (strcmp(token, temp) == 0)
+  {
+    free(temp);
     return false;
-
+  }
+  free(temp);
   return true;
 }
 
@@ -185,14 +195,24 @@ char *getEntry(char *entryline)
 
 bool check_opcode(char *line, int *type)
 {
-  line = strtok(NULL, LINE_SPACE);
+  char * token;
+  line = strtok(line, ARGUMENT_SEPARATOR); /*get instruction */
+  line = strtok(NULL, ARGUMENT_SEPARATOR); /*get first argument */
+  token =strtok(NULL,ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
   {
-    line = strtok(line, ARGUMENT_SEPARATOR);
-    if (!checkoperand(line))
+    if (!checkoperand(line)) /*Check first operand*/
+    {
+      alertError(ER_SOURCE_OPERAND);
       return false;
-    /* if(!checksecondop(line))
-         return false; */
+    }
+    if (!checkoperand(token)) /*Check second operand*/
+    {
+      alertError(ER_DESTINATION_OPERAND);
+      return false;
+    }
+    if(isRegister(line) && isRegister(token))
+      IC--;
   }
   else if (*type == ONE_OPERAND)
   {
@@ -214,7 +234,11 @@ bool check_opcode(char *line, int *type)
 
 bool checkoperand(char *operand)
 {
-  printf("isRegister=%d, isStruct=%d, isNumber=%d, check_label=%d\n", isRegister(operand), isStruct(operand), isNumber(operand), check_label(operand, NULL));
+  if (!operand)
+  {
+    alertError(ER_SOURCE_OPERAND);
+    return false;
+  }
   if (isRegister(operand))
   {
     IC++;
@@ -235,20 +259,17 @@ bool checkoperand(char *operand)
     IC++;
     return true;
   }
-   
   alertError(NOT_VALID_OPERAND);
-    return false;
+  return false;
 }
 
 bool isCommand(char *line, int *type)
 {
   int i;
-  char *tok;
-  tok = strtok(line, LINE_SPACE);
 
   /*Checking if command is type 2 operand*/
   for (i = 0; i < 5; i++)
-    if (strcmp(tok, TwoOperandCmd[i]) == 0)
+    if (strcmp(line, TwoOperandCmd[i]) == 0)
     {
       *type = TWO_OPERANDS;
       return true;
@@ -256,7 +277,7 @@ bool isCommand(char *line, int *type)
 
   /*Checking if command is type 1 operand*/
   for (i = 0; i < 9; i++)
-    if (strcmp(tok, SingleOperandCmd[i]) == 0)
+    if (strcmp(line, SingleOperandCmd[i]) == 0)
     {
       *type = ONE_OPERAND;
       return true;
@@ -264,7 +285,7 @@ bool isCommand(char *line, int *type)
 
   /*Checking if command is type 0 operand*/
   for (i = 0; i < 2; i++)
-    if (strcmp(tok, NoOperandCmd[i]) == 0)
+    if (strcmp(line, NoOperandCmd[i]) == 0)
     {
       *type = NO_OPERANDS;
       return true;
@@ -299,9 +320,10 @@ bool checkNumbers(char *line)
   }
   if (!isdigit(line[strlen(line) - 1]))
   {
-    alertError(ER_DATA_ENDS_WITH_COMMA);
+    alertError(ER_DATA_ENDS_WITHOUT_NUMBER);
     return false;
   }
+  line = strtok(line, ARGUMENT_SEPARATOR);
   while ((line = strtok(NULL, ARGUMENT_SEPARATOR)))
     count++;
 
@@ -318,7 +340,7 @@ bool checkString(char *line)
     return false;
   }
 
-  DC += strlen(line);
+  DC += strlen(line)-1;
   return true;
 }
 

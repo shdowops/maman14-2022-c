@@ -58,8 +58,15 @@ void firstpass(char *filename)
         is_code = true; /*all conditions failed - so it is code*/
         
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
-        no_error &= isCommand(trimmedline, &op_type); /* check instruction, if not exist, add error. */
+        token = (char*)malloc(sizeof(trimmedline));
+        strcpy(token,trimmedline);
+        token = strtok(token,ARGUMENT_SEPARATOR); /*get instruction*/
+        no_error &= isCommand(token, &op_type); /* check instruction, if not exist, add error. */
         no_error &= check_opcode(trimmedline, &op_type); /*check operands and count them*/
+
+        free(token);
+        
+
         /*build binary code of the instruction*/
         /* IC --> IC +L */
     }

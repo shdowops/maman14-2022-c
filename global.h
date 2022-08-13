@@ -13,6 +13,7 @@
 #define STRUCT ".struct"
 #define LABELMARK ":"
 #define LINE_SPACE " "
+#define BINARY_LENGTH 10
 #define MAX_LINE_LENGTH 81
 #define MAX_LABEL_LENGTH 30
 #define START_OF_LINE 0

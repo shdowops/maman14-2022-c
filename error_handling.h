@@ -38,13 +38,13 @@
 #define ER_MISSING_OPERANDS_IN_COMMAND "Operands are missing in the command"
 #define ER_OPERANDS_OVERFLOW_IN_COMMAND "An overflow of operands in the command exists"
 #define ER_DESTINATION_OPERAND "Destination operand does not exist"
-#define ER_Source_OPERAND "Source operand does not exist"
+#define ER_SOURCE_OPERAND "Source operand does not exist"
 #define ER_OUT_OF_BOUND_STRUCT "Out of bound struct reference"
 /*#define ER_STRING_DECLARATION ".string declaration is illegal" */
 
 /*Data Errors*/
 #define ER_DATA_BEGINS_WITH_COMMA ".data starts with comma"
-#define ER_DATA_ENDS_WITH_COMMA ".data ends without a number"
+#define ER_DATA_ENDS_WITHOUT_NUMBER ".data ends without a number"
 #define ER_STRING_WITHOUT_QUOTES ".string declared without quotes"
 
 /*Opcode Errors*/
