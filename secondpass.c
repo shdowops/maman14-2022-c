@@ -52,43 +52,70 @@ void secondpass(char *filename)
                 continue;
             }
 
-            /* finish encoding operands */
+            /* finish encoding operands*/
 
-            /*if (isEmptyLine(trimmedline) || isComment(trimmedline))
+            if (isEmptyLine(trimmedline) || isComment(trimmedline))
                 continue;
 
-             is label ?
-            if (isLabel(trimmedline, label))
+            is label ? if (isLabel(trimmedline, label))
 
-                kind = 0;
+                           kind = 0;
             if (isCommand(trimmedline, &kind))
-            {  check instruction type
-                if (kind != 0)
+            {
+                check instruction type if (kind != 0)
                 {
                     char *tok;
+                    char * strWord;
                     tok = strtok(trimmedline, LINE_SPACE);
+
                     if (kind == 1)
                     {
                         if (isRegister(tok))
                         {
-                            continue;
+                            int j;
+                            char transRegister [] = {"0000","0001","0010","0011","0100","0101","0110","0111"}; 
+                            for (j = 0; j < 8; j++)
+                            {
+                                if(tok==Registers[j])
+                                {
+                                    strWord==transRegister[j];
+                                }
+                            }
+                                continue;
                         }
                         else
                         {
                             if (isLabel(tok))
                             {
-continue;
+                                bool notFound=true;
+                                Symbol temp=head;
+                                while(temp->next!=NULL)
+                                {
+                                    if(temp->name!='\0')
+                                        {
+                                            if(strcmp(tok,temp->name)==0)
+                                            {
+                                                strWord=convert_decimal_Binary(temp->address);
+                                                notFound=false
+                                            }
+                                        }
+                                    temp=temp->next;
+                                }
+                                if(notFound)
+                                {
+                                    alertError(ER_LABEL_IS_MISSING);
+                                }
+
+                                continue;
                             }
                             else
                             {
                                 if (isdigit(line[strlen(tok) - 1]))
                                 {
-continue;
+                                    strWord=convert_decimal_Binary(tok);
+                                    continue;
                                 }
-                                else
-                                {
-continue;
-                                }
+                                
                             }
                         }
                     }
@@ -99,7 +126,7 @@ continue;
                 }
             }
             continue;
-*/
+
             /* is data? string? struct? extern? */
             if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStruct(trimmedline))
                 continue;
@@ -117,11 +144,11 @@ continue;
 }
 
 /*Translate to 32 bits*/
-char *translated(char line[])
+char *translated(char line[], char res [2])
 {
     char first[5];
     char second[5];
-    char res[2];
+    
     int i;
     int numOne;
     int numTwo;
