@@ -8,7 +8,7 @@ void secondpass(char *filename)
     bool no_error, is_data, is_code, is_entry, is_extern;
     FILE *processedfile = fopen(filename, "r");
     memset(label,0,MAX_LABEL_LENGTH-1); /*Reset the label to nothing*/
-
+    
     
     if (processedfile == NULL) /*If file was not opened*/
     {
@@ -31,7 +31,7 @@ void secondpass(char *filename)
                 continue;
 
             /* is data? string? struct? extern? */
-            if (isDataSymbol(trimmedline) || isExtern(trimmedline))
+            if (isDataSymbol(trimmedline) || isExtern(trimmedline)|| isStruct(trimmedline))
                 continue;
 
             /* is entry */
@@ -52,7 +52,8 @@ void secondpass(char *filename)
             }
 
             /* finish encoding operands */
-            /* update IC -> IC + L */
+            
+           /*IC = IC + L;*/
         }
     }
     /* end reading file */
