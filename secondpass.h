@@ -1,7 +1,7 @@
 #ifndef SECONDPASS_H
 #define SECONDPASS_H
+#define SQUARE(x) ((x)*(x))
 #include <stdio.h>
-#include <math.h>
 
 #include "global.h"
 void secondpass(char *filename);

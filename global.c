@@ -48,7 +48,8 @@ bool check_label(char *labeltocheck, char *labeltosave)
     }
     temp++;
   }
-  strcpy(labeltosave, labeltocheck);
+  if (labeltosave != NULL)
+    strcpy(labeltosave, labeltocheck);
   return true;
 }
 
@@ -60,7 +61,6 @@ bool isLabel(char *line, char *label)
   temp = strtok(temp, LABELMARK);
   if (strcmp(line, temp) == 0) /*No label found*/
     return false;
-
   secondpart = trim(strtok(NULL, LABELMARK));
   strcpy(line, secondpart);
   return check_label(temp, label);
@@ -112,20 +112,20 @@ bool isExtern(char *line)
 
 bool isDataSymbol(char *line)
 {
-  return (isData(line) || isString(line) || isStruct(line));
+  return (isDataDeclaration(line) || isStringDeclaration(line) || isStructDeclaration(line));
 }
 
-bool isData(char *line)
+bool isDataDeclaration(char *line)
 {
   return strstr(line, DATA);
 }
 
-bool isString(char *line)
+bool isStringDeclaration(char *line)
 {
   return strstr(line, STRING);
 }
 
-bool isStruct(char *line)
+bool isStructDeclaration(char *line)
 {
   return strstr(line, STRUCT);
 }
@@ -148,6 +148,34 @@ bool isRegister(char *line)
   return false;
 }
 
+bool isStruct(char *line)
+{
+  char *temp = malloc(sizeof(line));
+  strcpy(temp, line);
+  temp = strtok(temp, SEPARATOR);
+  temp = strtok(NULL, SEPARATOR);
+  if (*temp != STURCT_FIRST_ARG && *temp != STRUCT_SECOND_ARG)
+  {
+    alertError(ER_OUT_OF_BOUND_STRUCT);
+    return false;
+  }
+
+  return true;
+}
+
+bool isNumber(char *line)
+{
+  printf("line=%s\n", line);
+  char *temp = malloc(sizeof(line));
+  strcpy(temp, line);
+  temp = strtok(temp, NUMBERSTART);
+  printf("temp=%s\n", temp);
+  if (strcmp(line, temp) == 0)
+    return false;
+
+  return true;
+}
+
 char *getEntry(char *entryline)
 {
   char *token = strtok(entryline, LINE_SPACE);
@@ -155,30 +183,61 @@ char *getEntry(char *entryline)
   return token;
 }
 
-bool check_opcode(char *line, int *type, int *length)
+bool check_opcode(char *line, int *type)
 {
   line = strtok(NULL, LINE_SPACE);
   if (*type == TWO_OPERANDS)
   {
-    printf("Two arguments not implemented\n");
+    line = strtok(line, ARGUMENT_SEPARATOR);
+    if (!checkoperand(line))
+      return false;
+    /* if(!checksecondop(line))
+         return false; */
   }
   else if (*type == ONE_OPERAND)
   {
-    if (!(isalpha(line[START_OF_LINE]|| strcat(line[START_OF_LINE],NUMBERSTART) != 0) ) || !isalnum(line[strlen(line) - 1]))
-      alertError(NOT_VALID_OPERAND);
     line = strtok(NULL, LINE_SPACE);
-    if (line != NULL)
+    if (line != NULL && !checkoperand(line))
     {
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
+    IC++;
   }
-  else if (line != NULL)
+  else if (line != NULL) /* No operands command*/
   {
     alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
     return false;
   }
   return true;
+}
+
+bool checkoperand(char *operand)
+{
+  printf("isRegister=%d, isStruct=%d, isNumber=%d, check_label=%d\n", isRegister(operand), isStruct(operand), isNumber(operand), check_label(operand, NULL));
+  if (isRegister(operand))
+  {
+    IC++;
+    return true;
+  }
+  if (isStruct(operand))
+  {
+    IC += 2;
+    return true;
+  }
+  if (isNumber(operand))
+  {
+    IC++;
+    return true;
+  }
+  if (check_label(operand, NULL))
+  {
+    IC++;
+    return true;
+  }
+   
+  alertError(NOT_VALID_OPERAND);
+    return false;
 }
 
 bool isCommand(char *line, int *type)
@@ -230,6 +289,46 @@ int numOfTokens(char *tok)
   return count;
 }
 
+bool checkNumbers(char *line)
+{
+  int count = 0;
+  if (line[START_OF_LINE] == COMMA)
+  {
+    alertError(ER_DATA_BEGINS_WITH_COMMA);
+    return false;
+  }
+  if (!isdigit(line[strlen(line) - 1]))
+  {
+    alertError(ER_DATA_ENDS_WITH_COMMA);
+    return false;
+  }
+  while ((line = strtok(NULL, ARGUMENT_SEPARATOR)))
+    count++;
+
+  DC += count;
+  return true;
+}
+
+bool checkString(char *line)
+{
+  char *temp = strtok(line, "\"");
+  if (strcmp(line, temp) == 0)
+  {
+    alertError(ER_STRING_WITHOUT_QUOTES);
+    return false;
+  }
+
+  DC += strlen(line);
+  return true;
+}
+
+bool checkStruct(char *line)
+{
+  line = strtok(NULL, ARGUMENT_SEPARATOR);
+  DC += strlen(line);
+  return true;
+}
+
 /**
  The method recieves an integer number and converts it into binary and returns the binary number as a String.
   input params:
@@ -241,7 +340,7 @@ int numOfTokens(char *tok)
 char *convert_decimal_Binary(int num)
 {
 
-  int c, k;        /*Initializing variables to find the correct binary digit*/
+  int c, k;         /*Initializing variables to find the correct binary digit*/
   char *res, chTwo; /*Initializing the String which will contain the binary number*/
 
   /*Initializing the charachters for creating the binary number*/
@@ -249,7 +348,7 @@ char *convert_decimal_Binary(int num)
   int i = 0; /*Counter for identifying if it is the first binary digit*/
   res = NULL;
 
-    /*For loop to find the proper binary digit*/
+  /*For loop to find the proper binary digit*/
   for (c = 31; c >= 0; c--)
   {
     /*Locating proper binary digit*/
@@ -305,4 +404,3 @@ char *chop_string_for_address(char str[])
   res[4] = '\0';
   return res; return the desired address
 }*/
-

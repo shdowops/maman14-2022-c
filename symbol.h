@@ -62,4 +62,12 @@ void print_symbol(Symbol *head);
  */
 int check_length(char *line);
 
+/**
+ * @brief search for symbol in symbol list
+ * 
+ * @param head The begginig of the list
+ * @param name The symbol name
+ */
+void search_symbol(Symbol *head, char* name);
+
 #endif

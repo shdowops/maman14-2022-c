@@ -6,7 +6,7 @@ extern Symbol *head, *tail;
 
 void firstpass(char *filename)
 {
-    int op_type, length;
+    int op_type;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
     char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token;
     FILE *processedfile = fopen(filename, "r");
@@ -39,9 +39,9 @@ void firstpass(char *filename)
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
                 token = strtok(trimmedline, LINE_SPACE);
                 token = trim(strtok(NULL, LINE_SPACE));
-                if (isData(trimmedline))
+                if (isDataDeclaration(trimmedline))
                     no_error &= checkNumbers(token);
-                else if (isString(trimmedline))
+                else if (isStringDeclaration(trimmedline))
                     no_error &= checkString(token);
                 else
                     no_error &= checkStruct(token);
@@ -59,8 +59,7 @@ void firstpass(char *filename)
         
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
         no_error &= isCommand(trimmedline, &op_type); /* check instruction, if not exist, add error. */
-
-        no_error &= check_opcode(trimmedline, &op_type, &length); /*check operands and count them*/
+        no_error &= check_opcode(trimmedline, &op_type); /*check operands and count them*/
         /*build binary code of the instruction*/
         /* IC --> IC +L */
     }
@@ -69,7 +68,7 @@ void firstpass(char *filename)
         return;
     /* update symbol list data adding the right IC */
     updateData(head);
-    /* print_symbol(head);*/
+    print_symbol(head);
     /*Start second pass*/
     fclose(processedfile);
     /*secondpass(filename);*/
@@ -93,42 +92,3 @@ void updateData(Symbol *head)
     }
 }
 
-bool checkNumbers(char * line)
-{
-    int count = 0;
-    if(line[START_OF_LINE]==COMMA)
-    {
-        alertError(ER_DATA_BEGINS_WITH_COMMA);
-        return false;
-    }
-    if(!isdigit(line[strlen(line)-1]))
-    {
-        alertError(ER_DATA_ENDS_WITH_COMMA);
-        return false;
-    }
-    while((line = strtok(NULL,ARGUMENT_SEPARATOR)))
-        count++;
-
-    DC+=count;
-    return true;
-}
-
-bool checkString(char * line)
-{
-    char * temp = strtok(line,"\"");
-    if(strcmp(line,temp)==0)
-    {
-        alertError(ER_STRING_WITHOUT_QUOTES);
-        return false;
-    }
-
-    DC+=strlen(line);
-    return true;
-}
-
-bool checkStruct(char * line)
-{
-    line = strtok(NULL,ARGUMENT_SEPARATOR);
-    DC+=strlen(line);
-    return true;
-}

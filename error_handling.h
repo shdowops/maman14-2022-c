@@ -7,7 +7,7 @@
 #define ER_FAIL_CREATE_FILE "Failure with creating file"
 #define ER_OPEN_FILE "could not open the file"
 #define NO_FILE_SPECIFIED "No file specified for the compiler"
-#define FILENOTFOUND "The requested file %s not found"
+#define FILENOTFOUND "The requested file not found"
 #define ER_FILE_NAME_LENGTH "filename exceeds the proper length"
 #define ER_NO_INPUT_FILE "Input files are missing"
 #define ER_INPUT_FILE_NOT_EXIST "Input files do not exist"
@@ -39,6 +39,7 @@
 #define ER_OPERANDS_OVERFLOW_IN_COMMAND "An overflow of operands in the command exists"
 #define ER_DESTINATION_OPERAND "Destination operand does not exist"
 #define ER_Source_OPERAND "Source operand does not exist"
+#define ER_OUT_OF_BOUND_STRUCT "Out of bound struct reference"
 /*#define ER_STRING_DECLARATION ".string declaration is illegal" */
 
 /*Data Errors*/

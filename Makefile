@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -ansi -pedantic
+CFLAGS=-Wall -ansi -pedantic -lm
 TARGET=assembler
 AMFILES=$(wildcard *.am)
 

@@ -1,12 +1,11 @@
 #include "secondpass.h"
-
 extern long IC, DC;
 extern Symbol *head, *tail;
 void secondpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
     bool is_error;
-   /* int kind;*/
+    /* int kind;*/
     bool no_error, is_data, is_code, is_entry, is_extern;
     FILE *processedfile = fopen(filename, "r");
     memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
@@ -32,7 +31,7 @@ void secondpass(char *filename)
                 continue;
 
             /* is data? string? struct? extern? */
-            if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStruct(trimmedline))
+            if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStructDeclaration(trimmedline))
                 continue;
 
             /* is entry */
@@ -116,45 +115,43 @@ continue;
     /* save files */
 }
 
-
-
 /*Translate to 32 bits*/
-char *translated(char line [])
+char *translated(char line[])
 {
-  char first [5];
-  char second [5];
-  char res[2];
-  int i;
-  int numOne;
-  int numTwo;
-  char language [] ={'!','@' ,'#' ,'$', '%','^', '&', '*', '<', '>','a','b','c','d','e','f','g','h','i','j','k','l', 'm','n','o','p','q','r','s','t', 'u','v'};
-  for(i=0;i<5;i++)
-  {
-    first[i]=line[i];
-  }
-  for(i=0;i<5;i++)
-  {
-    second[i]=line[i];
-  }
-  numOne = binary_converter(first);
-  numTwo = binary_converter(second);
-  res[0]=language[numOne];
-  res[1]=language[numTwo];
-return res;
+    char first[5];
+    char second[5];
+    char res[2];
+    int i;
+    int numOne;
+    int numTwo;
+    char language[] = {'!', '@', '#', '$', '%', '^', '&', '*', '<', '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'};
+    for (i = 0; i < 5; i++)
+    {
+        first[i] = line[i];
+    }
+    for (i = 0; i < 5; i++)
+    {
+        second[i] = line[i];
+    }
+    numOne = binary_converter(first);
+    numTwo = binary_converter(second);
+    res[0] = language[numOne];
+    res[1] = language[numTwo];
+    return res;
 }
 
 /*The method recieves a binary number in a string format and converts it into an integer*/
 int binary_converter(char binary[])
 {
-	int length=5;
-  int decimal = 0;
-	int position = 0;
-	int index = length - 1;
-	while (index >= 0)
-	{
-		decimal = decimal + (binary[index] - 48) * pow(2, position);
-		index--;
-		position++;
-	}
-	return decimal;
+    int length = 5;
+    int decimal = 0;
+    int position = 0;
+    int index = length - 1;
+    while (index >= 0)
+    {
+        decimal = decimal + (binary[index] - 48) * SQUARE(position);
+        index--;
+        position++;
+    }
+    return decimal;
 }

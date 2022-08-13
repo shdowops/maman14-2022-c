@@ -4,7 +4,7 @@
 #define EXPANDED_EXT ".am"
 #define SEPARATOR "."
 #define COMMA ','
-#define ARGUMENT_SEPARATOR " ,."
+#define ARGUMENT_SEPARATOR " ,"
 #define EXTERN ".extern"
 #define ENTRY ".entry"
 #define DATA ".data"
@@ -22,6 +22,8 @@
 #define ONE_OPERAND 1
 #define TWO_OPERANDS 2
 #define NUMBERSTART "#"
+#define STURCT_FIRST_ARG '1'
+#define STRUCT_SECOND_ARG '2'
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +32,7 @@
 #include "error_handling.h"
 #include "symbol.h"
 
+extern long IC, DC;
 extern long linenumber;
 extern char *filename;
 
@@ -69,22 +72,18 @@ bool isDataSymbol(char *line);
 /*
 Description: check if string contains .data
 */
-bool isData(char *line);
+bool isDataDeclaration(char *line);
 
 /*
 Description: check if string contains .string
 */
-bool isString(char *line);
+bool isStringDeclaration(char *line);
 
 /*
 Description: check if string contains .struct
 */
-bool isStruct(char *line);
+bool isStructDeclaration(char *line);
 
-/*
-Description: check if line contains data declaration
-*/
-bool contains(char *line, char *data);
 
 /*
 Description: Check if line contains only whitespace characters
@@ -108,7 +107,7 @@ char *trim(char *line);
 /*
 Description: check if opcode exists.
 */
-bool check_opcode(char *line, int *type, int *length);
+bool check_opcode(char *line, int *type);
 
 /*
 Description: check if label is keyword
@@ -121,9 +120,39 @@ Description: check if it's a register.
 bool isRegister(char *line);
 
 /*
+Description: check if it is a valid stracture.
+*/
+bool isStruct(char *line);
+
+/*
+Descti
+*/
+bool isNumber(char *line);
+
+/*
 Description: check if it's a command.
 */
 bool isCommand(char *line, int * type);
+
+/*
+Description: check the first operand
+*/
+bool checkoperand(char *firstop);
+
+/*
+Description: Check if a number is valid
+*/
+bool checkNumbers(char * line);
+
+/*
+Description: check that a string is valid
+*/
+bool checkString(char * line);
+
+/*
+Description: check that struct is valid.
+*/
+bool checkStruct(char * line);
 
 
 /*Assisting function for the isCommand Method.

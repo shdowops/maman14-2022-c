@@ -28,11 +28,4 @@ void reset_label(char *label);
  */
 void updateData(Symbol *head);
 
-
-bool checkNumbers(char * line);
-
-bool checkString(char * line);
-
-bool checkStruct(char * line);
-
 #endif
