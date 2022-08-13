@@ -6,8 +6,9 @@ extern Symbol *head, *tail;
 
 void firstpass(char *filename)
 {
-    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token, *opcode;
+    int op_type;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
     IC = 100;
@@ -17,15 +18,13 @@ void firstpass(char *filename)
     /*read next line from file*/
     if (processedfile == NULL)
     {
-        /* Add error unable to open file*/
-        alertFileError(ER_OPEN_FILE);
+        alertFileError(ER_OPEN_FILE);         /* Add error unable to open file*/
         return;
     }
 
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
-        /*reset_label(label);*/
-        memset(label,0,MAX_LABEL_LENGTH-1);
+        memset(label,0,MAX_LABEL_LENGTH-1); /*Reset the label to nothing*/
         is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
         strcpy(trimmedline, trim(line));
@@ -34,8 +33,7 @@ void firstpass(char *filename)
 
         is_label = isLabel(trimmedline, label); /*is it a label? */
 
-        /*check if .data? .string? .struct? */
-        if ((is_data = isDataSymbol(trimmedline)))
+        if ((is_data = isDataSymbol(trimmedline)))         /*is it .data? .string? .struct? */
             if (is_label)
             {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
@@ -50,21 +48,17 @@ void firstpass(char *filename)
                 continue;
             }
 
-        /*if .extern? .entry? */
-        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline)))
+        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline)))         /*is it .extern? .entry? */
         {
             if (is_extern)  
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
             continue;
         }
 
-        is_code = true;
-        /* insert to symbol as code with IC value*/
-        /*if (is_label) Instuction with label*/
-        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
-        /* check instruction, if not exist, add error. */
-        opcode = strtok(trimmedline,LINE_SPACE);
-        no_error &= isCommand(opcode);
+        is_code = true; /*all conditions failed - so it is code*/
+        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
+        no_error &= isCommand(trimmedline, &op_type); /* check instruction, if not exist, add error. */
+
         /*check operands and count them*/
         /*build binary code of the instruction*/
         /* IC --> IC +L */

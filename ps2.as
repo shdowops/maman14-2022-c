@@ -2,5 +2,5 @@
 	HELLO :         mov S1.2, r1
 	HELLO,fdafhoijeafewjiofjwa@#43145G:         mov S1.2, r1
 	HELLO,4!@:         mov S1.2, r1
-	HELLO:         .data 3,4,5,
+	HELLO:         shoko S1.2, r1
 	HELLO:         mov S1.2, r1

@@ -7,4 +7,4 @@ assembler: main.c main.h preprocessor.c preprocessor.h firstpass.c firstpass.h s
 	$(CC) $(CFLAGS) main.c main.h preprocessor.c preprocessor.h firstpass.c firstpass.h secondpass.c secondpass.h global.h global.c error_handling.h error_handling.c symbol.c symbol.h -o $(TARGET)
 
 clean:
-	rm $(TARGET) $(AMFILES)
+	rm -f $(TARGET) $(AMFILES)

@@ -119,7 +119,7 @@ bool isRegister(char *line);
 /*
 Description: check if it's a command.
 */
-bool isCommand(char *line);
+bool isCommand(char *line, int * type);
 
 
 /*Assisting function for the isCommand Method.

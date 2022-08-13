@@ -1,5 +1,4 @@
 #include "global.h"
-#include "error_handling.h"
 char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
@@ -162,69 +161,29 @@ bool check_opcode(char *line)
   return true;
 }
 
-bool isCommand(char *line)
+bool isCommand(char *line, int *type)
 {
-  int kind;
   int i;
   char *tok;
   tok = strtok(line, LINE_SPACE);
-  kind = -1;
+
   /*Checking if command is type 2 operand*/
   for (i = 0; i < 5; i++)
-  {
     if (strcmp(tok, TwoOperandCmd[i]) == 0)
-    {
-      kind = 2;
-      tok = strtok(NULL, LINE_SPACE);
-      tok = strtok(tok, ARGUMENT_SEPARATOR);
-      if (numOfTokens(tok) != 2)
-      {
-        alertError(ER_MISSING_OPERANDS_IN_COMMAND);
-        return false;
-      }
-    }
-  }
+      return true;
+
   /*Checking if command is type 1 operand*/
   for (i = 0; i < 9; i++)
-  {
     if (strcmp(tok, SingleOperandCmd[i]) == 0)
-    {
-      kind = 1;
-      tok = strtok(NULL, LINE_SPACE);
-      tok = strtok(tok, ARGUMENT_SEPARATOR);
-      if (numOfTokens(tok) == 2)
-      {
-        alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
-        return false;
-      }
-      if (numOfTokens(tok) == 0)
-      {
-        alertError(ER_MISSING_OPERANDS_IN_COMMAND);
-        return false;
-      }
-    }
-  }
+      return true;
+
   /*Checking if command is type 0 operand*/
   for (i = 0; i < 2; i++)
-  {
     if (strcmp(tok, NoOperandCmd[i]) == 0)
-    {
-      kind = 0;
-      tok = strtok(NULL, LINE_SPACE);
-      tok = strtok(tok, ARGUMENT_SEPARATOR);
-      if (numOfTokens(tok) != 0)
-      {
-        alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
-        return false;
-      }
-    }
-  }
-  if (kind == -1)
-  {
-    alertError(ER_OPCODE_ILLEGAL);
-    return false;
-  }
-  return true;
+      return true;
+
+  alertError(ER_OPCODE_ILLEGAL);
+  return false;
 }
 
 /*Assisting function for the isCommand Method.
