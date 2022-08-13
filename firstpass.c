@@ -63,29 +63,16 @@ void firstpass(char *filename)
         token = strtok(token,ARGUMENT_SEPARATOR); /*get instruction*/
         no_error &= isCommand(token, &op_type); /* check instruction, if not exist, add error. */
         no_error &= check_opcode(trimmedline, &op_type); /*check operands and count them*/
-
         free(token);
-        
-
-        /*build binary code of the instruction*/
-        /* IC --> IC +L */
     }
     /* Finished reading the file*/
     if (!no_error)
         return;
     /* update symbol list data adding the right IC */
     updateData(head);
-    print_symbol(head);
     /*Start second pass*/
     fclose(processedfile);
-    /*secondpass(filename);*/
-}
-
-void reset_label(char *label)
-{
-    int i;
-    for (i = 0; i < MAX_LABEL_LENGTH; i++)
-        label[i] = '\0';
+    secondpass(filename);
 }
 
 void updateData(Symbol *head)

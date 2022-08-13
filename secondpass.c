@@ -3,6 +3,7 @@ extern long IC, DC;
 extern Symbol *head, *tail;
 void secondpass(char *filename)
 {
+    print_symbol(head);
     char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
     bool is_error;
     /* int kind;*/

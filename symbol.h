@@ -13,7 +13,7 @@ typedef struct Symbol
     bool is_Entry;
     bool is_Extern;
     char *data;
-    char **binarydata;
+    char *binarydata;
     struct Symbol *next;
 } Symbol;
 

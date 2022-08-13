@@ -15,13 +15,6 @@ Description: Run the first pass on the expanded file
 void firstpass(char *filename);
 
 /**
- * @brief Initialize label array.
- * 
- * @param label The label array
- */
-void reset_label(char *label);
-
-/**
  * @brief Updated the data address number
  * 
  * @param head The beginning of the Symbol list.
