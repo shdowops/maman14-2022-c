@@ -3,11 +3,11 @@ extern long IC, DC;
 extern Symbol *head, *tail;
 void secondpass(char *filename)
 {
-    print_symbol(head);
-    char line[MAX_LINE_LENGTH], *trimmedline, label[MAX_LABEL_LENGTH];
+    char line[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *trimmedline;
     bool is_error;
     /* int kind;*/
     bool no_error, is_data, is_code, is_entry, is_extern;
+    FILE *ent_fptr, *ext_fptr, *obj_fptr;
     FILE *processedfile = fopen(filename, "r");
     memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
 
@@ -27,9 +27,7 @@ void secondpass(char *filename)
                 continue;
 
             /* is label ?*/
-            if (isLabel(trimmedline, label))
-                /*skip to next field*/
-                continue;
+            isLabel(trimmedline, label);
 
             /* is data? string? struct? extern? */
             if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStructDeclaration(trimmedline))
@@ -139,8 +137,26 @@ void secondpass(char *filename)
         /*print error*/
         return;
 
-    printf("filename:%s\n", filename);
+    strtok(filename, SEPARATOR);
+    ent_fptr = fopen(strcat(filename, ENTRY_EXT),"wb");
+    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT),"wb");
+    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT),"wb");
+
+    if(!ent_fptr || !ext_fptr || !obj_fptr )
+    {
+        alertError(ER_OPEN_FILE);
+        return;
+    }
+
     /* save files */
+    save_files(ent_fptr, ext_fptr, obj_fptr);
+}
+
+void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr)
+{
+    fclose(ent_fptr);
+    fclose(ext_fptr);
+    fclose(obj_fptr);
 }
 
 /*Translate to 32 bits*/

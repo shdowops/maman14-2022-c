@@ -2,6 +2,9 @@
 #define GLOBAL_H
 #define ORIGINAL_EXT ".as"
 #define EXPANDED_EXT ".am"
+#define ENTRY_EXT ".ent"
+#define EXTERN_EXT ".ext"
+#define OBJECT_EXT ".ob"
 #define SEPARATOR "."
 #define COMMA ','
 #define ARGUMENT_SEPARATOR " ,"
@@ -13,6 +16,8 @@
 #define STRUCT ".struct"
 #define LABELMARK ":"
 #define LINE_SPACE " "
+#define OPCODE_LENGTH 5
+#define OPCODE_AMOUNT 16
 #define BINARY_LENGTH 10
 #define MAX_LINE_LENGTH 81
 #define MAX_LABEL_LENGTH 30
@@ -36,6 +41,14 @@
 extern long IC, DC;
 extern long linenumber;
 extern char *filename;
+
+typedef struct opcode{
+	int decimal;
+	char* name;
+	char* code;
+	int type;
+} opcode;
+
 
 /*
 Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",
@@ -108,7 +121,7 @@ char *trim(char *line);
 /*
 Description: check if opcode exists.
 */
-bool check_opcode(char *line, int *type);
+bool check_opcode(char *line, int *type, char *binarydata);
 
 /*
 Description: check if label is keyword
@@ -154,6 +167,11 @@ bool checkString(char * line);
 Description: check that struct is valid.
 */
 bool checkStruct(char * line);
+
+/*
+Description: Get opcode from line
+*/
+char* getopcode(char * line);
 
 
 /*Assisting function for the isCommand Method.

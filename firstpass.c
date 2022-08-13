@@ -8,7 +8,7 @@ void firstpass(char *filename)
 {
     int op_type;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
-    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token;
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], binarydata[BINARY_LENGTH], *token;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
     IC = 100;
@@ -18,13 +18,14 @@ void firstpass(char *filename)
     /*read next line from file*/
     if (processedfile == NULL)
     {
-        alertFileError(ER_OPEN_FILE);         /* Add error unable to open file*/
+        alertFileError(ER_OPEN_FILE); /* Add error unable to open file*/
         return;
     }
 
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
-        memset(label,0,MAX_LABEL_LENGTH-1); /*Reset the label to nothing*/
+        memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
+        memset(binarydata,0,BINARY_LENGTH -1);
         is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
         strcpy(trimmedline, trim(line));
@@ -33,7 +34,7 @@ void firstpass(char *filename)
 
         is_label = isLabel(trimmedline, label); /*is it a label? */
 
-        if ((is_data = isDataSymbol(trimmedline)))         /*is it .data? .string? .struct? */
+        if ((is_data = isDataSymbol(trimmedline))) /*is it .data? .string? .struct? */
             if (is_label)
             {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
@@ -48,22 +49,23 @@ void firstpass(char *filename)
                 continue;
             }
 
-        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline)))         /*is it .extern? .entry? */
+        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline))) /*is it .extern? .entry? */
         {
-            if (is_extern)  
+            if (is_extern)
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
             continue;
         }
 
         is_code = true; /*all conditions failed - so it is code*/
-        
+
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
-        token = (char*)malloc(sizeof(trimmedline));
-        strcpy(token,trimmedline);
-        token = strtok(token,ARGUMENT_SEPARATOR); /*get instruction*/
-        no_error &= isCommand(token, &op_type); /* check instruction, if not exist, add error. */
-        no_error &= check_opcode(trimmedline, &op_type); /*check operands and count them*/
+        token = (char *)malloc(sizeof(trimmedline));
+        strcpy(token, trimmedline);
+        token = strtok(token, ARGUMENT_SEPARATOR);                   /*get instruction*/
+        no_error &= isCommand(token, &op_type);                      /* check instruction, if not exist, add error. */
+        no_error &= check_opcode(trimmedline, &op_type, binarydata); /*check operands and count them*/
         free(token);
+        
     }
     /* Finished reading the file*/
     if (!no_error)
@@ -85,4 +87,3 @@ void updateData(Symbol *head)
         head = head->next;
     }
 }
-

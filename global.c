@@ -5,6 +5,26 @@ char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "le
 char *TwoOperandCmd[] = {"mov", "cmp", "add", "sub", "lea"};
 char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "prn", "jsr"};
 char *NoOperandCmd[] = {"rts", "hlt"};
+
+opcode opcodes[OPCODE_AMOUNT] = {
+{ 0		,	"mov"	,"0000"	,	TWO_OPERANDS },
+{ 1		,	"cmp"	,"0001"	,	TWO_OPERANDS },
+{ 2		,	"add"	,"0010",	TWO_OPERANDS },
+{ 3		,	"sub"	,"0011"	,	TWO_OPERANDS },
+{ 4		,	"not"	,"0100"	,	ONE_OPERAND },
+{ 5		,	"clr"	,"0101"	,	ONE_OPERAND },
+{ 6		,	"lea"	,"0110"	,	ONE_OPERAND },
+{ 7		,	"inc"	,"0111"	,	ONE_OPERAND },
+{ 8		,	"dec"	,"1000"	,	ONE_OPERAND },
+{ 9		,	"jmp"	,"1001"	,	ONE_OPERAND },
+{ 10	,	"bne"	,"1010"	,	ONE_OPERAND },
+{ 11	,	"get"	,"1011"	,	ONE_OPERAND },
+{ 12	,	"prn"	,"1100"	,	ONE_OPERAND },
+{ 13	,	"jsr"	,"1101"	,	ONE_OPERAND },
+{ 14	,	"rts"	,"1110"	,	NO_OPERANDS },
+{ 15	,	"hlt"	,"1111"	,	NO_OPERANDS }
+};
+
 char *filename;
 
 bool check_label(char *labeltocheck, char *labeltosave)
@@ -155,7 +175,7 @@ bool isStruct(char *line)
   strcpy(temp, line);
   token = strtok(temp, SEPARATOR);
   token = strtok(NULL, SEPARATOR);
-  if(!token)
+  if (!token)
   {
     free(temp);
     return false;
@@ -193,12 +213,14 @@ char *getEntry(char *entryline)
   return token;
 }
 
-bool check_opcode(char *line, int *type)
+bool check_opcode(char *line, int *type, char *binarydata)
 {
-  char * token;
+  char *token;
   line = strtok(line, ARGUMENT_SEPARATOR); /*get instruction */
-  line = strtok(NULL, ARGUMENT_SEPARATOR); /*get first argument */
-  token =strtok(NULL,ARGUMENT_SEPARATOR); /*get second argument */
+  strcat(binarydata, getopcode(line));
+  printf("bindata=%s\n",binarydata);
+  line = strtok(NULL, ARGUMENT_SEPARATOR);  /*get first argument */
+  token = strtok(NULL, ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
   {
     if (!checkoperand(line)) /*Check first operand*/
@@ -211,7 +233,7 @@ bool check_opcode(char *line, int *type)
       alertError(ER_DESTINATION_OPERAND);
       return false;
     }
-    if(isRegister(line) && isRegister(token))
+    if (isRegister(line) && isRegister(token))
       IC--;
   }
   else if (*type == ONE_OPERAND)
@@ -298,6 +320,17 @@ bool isCommand(char *line, int *type)
 /*Assisting function for the isCommand Method.
  *This method checks how many operands there are in the line
  */
+
+char *getopcode(char *line)
+{
+  int i;
+  for(i=0;i<OPCODE_AMOUNT;i++)
+    if(strcmp(line, opcodes[i].name )==0)
+      break;
+  
+  return(opcodes[i].code);
+}
+
 int numOfTokens(char *tok)
 {
   int count = 0;
@@ -340,7 +373,7 @@ bool checkString(char *line)
     return false;
   }
 
-  DC += strlen(line)-1;
+  DC += strlen(line) - 1;
   return true;
 }
 
