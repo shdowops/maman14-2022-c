@@ -55,6 +55,8 @@
 /*Entry Extern Errors*/
 #define ER_AFTER_ENTRY "After an entry a space is needed"
 #define ER_AFTER_EXTERN "After extern a space is needed"
+#define ER_EMPTY_ENTREY "Empty entry statement"
+
 
 /*General Errors*/
 #define ER_NUM_OUT_OF_RANGE "There is a distinct rang efor numbers. -256 to 256 is the range. The number you provided is out of this range"

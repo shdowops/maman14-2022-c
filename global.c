@@ -207,57 +207,56 @@ int numOfTokens(char *tok)
   @num: the number that will be converted to binary.
   returns
   @res: the string which is the binary number.
-
+*/
 
 char *convert_decimal_Binary(int num)
 {
 
-  int c, k;        Initializing variables to find the correct binary digit
-  char res, chTwo; Initializing the String which will contain the binary number
+  int c, k;        /*Initializing variables to find the correct binary digit*/
+  char *res, chTwo; /*Initializing the String which will contain the binary number*/
 
-  Initializing the charachters for creating the binary number
+  /*Initializing the charachters for creating the binary number*/
   char chOne = '1';
-  char chZero = '0';
+  int i = 0; /*Counter for identifying if it is the first binary digit*/
+  res = NULL;
 
-  int i = 0; Counter for identifying if it is the first binary digit
-
-    For loop to find the proper binary digit
+    /*For loop to find the proper binary digit*/
   for (c = 31; c >= 0; c--)
   {
-    Locating proper binary digit
+    /*Locating proper binary digit*/
     k = num >> c;
-    Checking if first binary digit
+    /*Checking if first binary digit*/
     if (i == 0)
     {
-      Checking what is the proper binary digit
+      /*Checking what is the proper binary digit*/
       if (k & 1)
       {
-        res = '1';
+        *res = '1';
       }
       else
       {
-        res = '0';
+        *res = '0';
       }
 
-      i = 1; Updating that first binary digit had been found
+      i = 1; /*Updating that first binary digit had been found*/
     }
-    If this is not the first binary digit
+    /*If this is not the first binary digit*/
     else
     {
-      Checking what is the proper binary digit
+      /*Checking what is the proper binary digit*/
       if (k & 1)
       {
-        strncat(res, &chOne, 1); Adding the binary digit to the binary number
+        strncat(res, &chOne, 1); /*Adding the binary digit to the binary number*/
       }
       else
       {
-        strncat(res, &chTwo, 1); Adding the binary digit to the binary number
+        strncat(res, &chTwo, 1); /*Adding the binary digit to the binary number*/
       }
     }
-  }           End of for loop
-  return res; Return the binary number
+  }           /*End of for loop*/
+  return res; /*Return the binary number*/
 }
-*/
+
 /** The method will recieve a string representing all digits for the bin number and will return according
 to memory location.
 input param:
