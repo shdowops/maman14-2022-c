@@ -6,7 +6,7 @@ extern Symbol *head, *tail;
 
 void firstpass(char *filename)
 {
-    int op_type;
+    int op_type, length;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
     char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *token;
     FILE *processedfile = fopen(filename, "r");
@@ -56,10 +56,11 @@ void firstpass(char *filename)
         }
 
         is_code = true; /*all conditions failed - so it is code*/
+        
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
         no_error &= isCommand(trimmedline, &op_type); /* check instruction, if not exist, add error. */
 
-        /*check operands and count them*/
+        no_error &= check_opcode(trimmedline, &op_type, &length); /*check operands and count them*/
         /*build binary code of the instruction*/
         /* IC --> IC +L */
     }
@@ -68,7 +69,7 @@ void firstpass(char *filename)
         return;
     /* update symbol list data adding the right IC */
     updateData(head);
-    print_symbol(head);
+    /* print_symbol(head);*/
     /*Start second pass*/
     fclose(processedfile);
     /*secondpass(filename);*/

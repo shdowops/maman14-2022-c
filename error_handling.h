@@ -34,6 +34,7 @@
 /*Instruction Errors*/
 #define ER_INSTRUCTION_NOT_EXIST "Instraction %s does not exist"
 #define ER_JUMPING_NOT_START_LABEL "Jumping with parameters must begin with a label"
+#define NOT_VALID_OPERAND "The operand is not valid"
 #define ER_MISSING_OPERANDS_IN_COMMAND "Operands are missing in the command"
 #define ER_OPERANDS_OVERFLOW_IN_COMMAND "An overflow of operands in the command exists"
 #define ER_DESTINATION_OPERAND "Destination operand does not exist"

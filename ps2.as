@@ -4,3 +4,4 @@
 	HELLO,4!@:         mov S1.2, r1
 	HELLO:         shoko S1.2, r1
 	HELLO:         mov S1.2, r1
+	HELLO3:        not r2,

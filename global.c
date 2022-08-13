@@ -155,9 +155,29 @@ char *getEntry(char *entryline)
   return token;
 }
 
-bool check_opcode(char *line)
+bool check_opcode(char *line, int *type, int *length)
 {
-  printf("Checking opcode");
+  line = strtok(NULL, LINE_SPACE);
+  if (*type == TWO_OPERANDS)
+  {
+    printf("Two arguments not implemented\n");
+  }
+  else if (*type == ONE_OPERAND)
+  {
+    if (!(isalpha(line[START_OF_LINE]|| strcat(line[START_OF_LINE],NUMBERSTART) != 0) ) || !isalnum(line[strlen(line) - 1]))
+      alertError(NOT_VALID_OPERAND);
+    line = strtok(NULL, LINE_SPACE);
+    if (line != NULL)
+    {
+      alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+      return false;
+    }
+  }
+  else if (line != NULL)
+  {
+    alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+    return false;
+  }
   return true;
 }
 
@@ -170,17 +190,26 @@ bool isCommand(char *line, int *type)
   /*Checking if command is type 2 operand*/
   for (i = 0; i < 5; i++)
     if (strcmp(tok, TwoOperandCmd[i]) == 0)
+    {
+      *type = TWO_OPERANDS;
       return true;
+    }
 
   /*Checking if command is type 1 operand*/
   for (i = 0; i < 9; i++)
     if (strcmp(tok, SingleOperandCmd[i]) == 0)
+    {
+      *type = ONE_OPERAND;
       return true;
+    }
 
   /*Checking if command is type 0 operand*/
   for (i = 0; i < 2; i++)
     if (strcmp(tok, NoOperandCmd[i]) == 0)
+    {
+      *type = NO_OPERANDS;
       return true;
+    }
 
   alertError(ER_OPCODE_ILLEGAL);
   return false;

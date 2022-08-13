@@ -18,6 +18,10 @@
 #define START_OF_LINE 0
 #define NUM_OF_REGISTERS 8
 #define NUM_OF_KEYWORDS 21
+#define NO_OPERANDS 0
+#define ONE_OPERAND 1
+#define TWO_OPERANDS 2
+#define NUMBERSTART "#"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,7 +108,7 @@ char *trim(char *line);
 /*
 Description: check if opcode exists.
 */
-bool check_opcode(char *line);
+bool check_opcode(char *line, int *type, int *length);
 
 /*
 Description: check if label is keyword
