@@ -10,10 +10,10 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     char *labelname = (char *)malloc(sizeof(label));
     char *data = (char *)malloc(sizeof(line));
     strcpy(labelname, label);
-    strcpy(data,line);
+    strcpy(data, line);
     if (!symNew || !labelname)
     {
-        printf("Unable to allocate memory\n");
+        alertFileError(ER_MEMORY_ALLOCATION);
         return false;
     }
     symNew->name = labelname;
@@ -24,21 +24,25 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     symNew->data = data;
     symNew->next = NULL;
 
-    if(is_Data)
+    if (is_Data)
     {
-        symNew->address=DC;
+        symNew->address = DC;
         DC++;
     }
-    else if(is_Code)
+    else if (is_Code)
     {
-        symNew->address=IC;
+        symNew->address = IC;
         IC++;
     }
-    else
+    else if (is_Entry || is_Extern)
     {
-        symNew->address=0;
+        symNew->address = 0;
     }
-    
+    else /* not data, not code, not entry and not extern ---> regular command*/
+    {
+        symNew->address = IC;
+        IC++;
+    }
 
     if (head == NULL)
     {
@@ -49,7 +53,7 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
     while (temp != NULL)
     {
-        if (strcmp(temp->name, symNew->name) == 0 && !is_Extern && !labelname)
+        if (strcmp(temp->name, symNew->name) == 0 && !is_Extern && strlen(labelname))
         {
             alertError(ER_LABEL_ALREADY_EXISTS);
             return false;
@@ -63,7 +67,6 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 
 void print_symbol(Symbol *head)
 {
-
     while (head != NULL)
     {
         printf("name: %s ", head->name);
@@ -72,21 +75,8 @@ void print_symbol(Symbol *head)
         printf("is_data: %d ", head->is_Data);
         printf("is_entry: %d ", head->is_Entry);
         printf("is_extern: %d ", head->is_Extern);
-        printf("data: %s ",head->data);
+        printf("data: %s ", head->data);
         printf("\n");
         head = head->next;
     }
-}
-
-int check_length(char *line)
-{
-    int length = 0;
-    char *token = trim(strtok(NULL, ARGUMENT_SEPARATOR));
-    while (token != NULL)
-    {
-        length++;
-        token = trim(strtok(NULL, ARGUMENT_SEPARATOR));
-    }
-
-    return length;
 }

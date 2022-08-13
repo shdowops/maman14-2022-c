@@ -42,6 +42,7 @@
 
 /*Data Errors*/
 #define ER_DATA_BEGINS_WITH_COMMA ".data starts with comma"
+#define ER_DATA_ENDS_WITH_COMMA ".data ends without a number"
 #define ER_STRING_WITHOUT_QUOTES ".string declared without quotes"
 
 /*Opcode Errors*/

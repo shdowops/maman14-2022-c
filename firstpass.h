@@ -19,7 +19,7 @@ void firstpass(char *filename);
  * 
  * @param label The label array
  */
-void init_label(char *label);
+void reset_label(char *label);
 
 /**
  * @brief Updated the data address number
@@ -29,10 +29,10 @@ void init_label(char *label);
 void updateData(Symbol *head);
 
 
-int checkNumbers(char * line);
+bool checkNumbers(char * line);
 
-int checkString(char * line);
+bool checkString(char * line);
 
-int checkStruct(char * line);
+bool checkStruct(char * line);
 
 #endif
