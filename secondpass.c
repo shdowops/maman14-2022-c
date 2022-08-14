@@ -1,7 +1,7 @@
 #include "secondpass.h"
 extern long IC, DC;
 extern Symbol *head, *tail;
-char *Registers[NUM_OF_REGISTERS];
+extern char *Registers[NUM_OF_REGISTERS];
 void secondpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *trimmedline;
@@ -103,7 +103,7 @@ void secondpass(char *filename)
                                     }
                                     temp = temp->next;
                                 }
-                                if (notFound)
+                                if  (notFound)
                                 {
                                     alertError(ER_LABEL_IS_MISSING);
                                 }
@@ -127,7 +127,7 @@ void secondpass(char *filename)
                         tok = strtok(line, ARGUMENT_SEPARATOR);
                     }
                 }
-            }
+            } 
             continue;
 
             /* is data? string? struct? extern? */
@@ -143,9 +143,9 @@ void secondpass(char *filename)
         return;
 
     strtok(filename, SEPARATOR);
-    ent_fptr = fopen(strcat(filename, ENTRY_EXT), "wb");
-    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT), "wb");
-    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT), "wb");
+    ent_fptr = fopen(strcat(filename, ENTRY_EXT),  "wb");
+    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT),  "wb");
+    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT),  "wb");
 
     if (!ent_fptr || !ext_fptr || !obj_fptr)
     {

@@ -1,12 +1,11 @@
 #include "global.h"
-
-
-
+char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 char *Keywords[NUM_OF_KEYWORDS] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "get", "prn", "jsr", "rts", "hlt",
                                    ".data", ".string", ".extern", ".entry", ".struct"};
 char *TwoOperandCmd[] = {"mov", "cmp", "add", "sub", "lea"};
 char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "prn", "jsr"};
 char *NoOperandCmd[] = {"rts", "hlt"};
+
 opcode opcodes[OPCODE_AMOUNT] = {
 { 0		,	"mov"	,"0000"	,	TWO_OPERANDS },
 { 1		,	"cmp"	,"0001"	,	TWO_OPERANDS },
@@ -218,18 +217,17 @@ bool check_opcode(char *line, int *type, char *binarydata)
 {
   char *token;
   line = strtok(line, ARGUMENT_SEPARATOR); /*get instruction */
-  strcat(binarydata, getopcode(line));
-  printf("bindata=%s\n",binarydata);
+  strcat(binarydata, getopcode(line)); /*save instruction binary code */
   line = strtok(NULL, ARGUMENT_SEPARATOR);  /*get first argument */
   token = strtok(NULL, ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
   {
-    if (!checkoperand(line)) /*Check first operand*/
+    if (!checkoperand(line,binarydata)) /*Check first operand*/
     {
       alertError(ER_SOURCE_OPERAND);
       return false;
     }
-    if (!checkoperand(token)) /*Check second operand*/
+    if (!checkoperand(token,binarydata)) /*Check second operand*/
     {
       alertError(ER_DESTINATION_OPERAND);
       return false;
@@ -239,46 +237,53 @@ bool check_opcode(char *line, int *type, char *binarydata)
   }
   else if (*type == ONE_OPERAND)
   {
-    line = strtok(NULL, LINE_SPACE);
-    if (line != NULL && !checkoperand(line))
+    strcat(binarydata,"00"); /*No source operand*/
+    if (line && !checkoperand(line,binarydata))
     {
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
     IC++;
   }
-  else if (line != NULL) /* No operands command*/
+  else  /* No operands command*/
   {
-    alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
-    return false;
+    if (line != NULL)
+    {
+      alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
+      return false;
+    }
+    strcat(binarydata,"000000");
   }
+
   return true;
 }
 
-bool checkoperand(char *operand)
+bool checkoperand(char *operand, char * binarydata)
 {
   if (!operand)
-  {
-    alertError(ER_SOURCE_OPERAND);
     return false;
-  }
+  
   if (isRegister(operand))
   {
+    strcat(binarydata,"11");
     IC++;
     return true;
   }
   if (isStruct(operand))
   {
+    strcat(binarydata,"10");
     IC += 2;
     return true;
   }
   if (isNumber(operand))
   {
+    strcat(binarydata,"00");
     IC++;
     return true;
   }
   if (check_label(operand, NULL))
   {
+    strcat(binarydata,"01");
     IC++;
     return true;
   }
@@ -372,6 +377,12 @@ bool checkString(char *line)
   {
     alertError(ER_STRING_WITHOUT_QUOTES);
     return false;
+  }
+
+  while(*temp!='\0')
+  {
+    /*convert to binary *temp */
+    temp++;
   }
 
   DC += strlen(line) - 1;

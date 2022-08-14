@@ -18,7 +18,7 @@
 #define LINE_SPACE " "
 #define OPCODE_LENGTH 5
 #define OPCODE_AMOUNT 16
-#define BINARY_LENGTH 10
+#define BINARY_LENGTH 11
 #define MAX_LINE_LENGTH 81
 #define MAX_LABEL_LENGTH 30
 #define START_OF_LINE 0
@@ -37,10 +37,11 @@
 #include <ctype.h>
 #include "error_handling.h"
 #include "symbol.h"
-char *Registers[NUM_OF_REGISTERS] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+
 extern long IC, DC;
 extern long linenumber;
 extern char *filename;
+
 typedef struct opcode{
 	int decimal;
 	char* name;
@@ -150,7 +151,7 @@ bool isCommand(char *line, int * type);
 /*
 Description: check the first operand
 */
-bool checkoperand(char *firstop);
+bool checkoperand(char *operand, char *binarydata);
 
 /*
 Description: Check if a number is valid

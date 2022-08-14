@@ -8,12 +8,14 @@ void firstpass(char *filename)
 {
     int op_type;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
-    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], binarydata[BINARY_LENGTH], *token;
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], binarydata[BINARY_LENGTH];
+    char *token, *savedbinarydata;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
     IC = 100;
     DC = linenumber = 0;
     no_error = true;
+    savedbinarydata = NULL;
 
     /*read next line from file*/
     if (processedfile == NULL)
@@ -52,7 +54,10 @@ void firstpass(char *filename)
         if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline))) /*is it .extern? .entry? */
         {
             if (is_extern)
+            {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
+                tail->binarydata = savedbinarydata;
+            }
             continue;
         }
 
@@ -65,6 +70,9 @@ void firstpass(char *filename)
         no_error &= isCommand(token, &op_type);                      /* check instruction, if not exist, add error. */
         no_error &= check_opcode(trimmedline, &op_type, binarydata); /*check operands and count them*/
         free(token);
+        savedbinarydata = (char*)malloc(sizeof(binarydata));
+        strcpy(savedbinarydata,binarydata);
+        tail->binarydata = savedbinarydata;
         
     }
     /* Finished reading the file*/
@@ -72,6 +80,7 @@ void firstpass(char *filename)
         return;
     /* update symbol list data adding the right IC */
     updateData(head);
+    print_symbol(head);
     /*Start second pass*/
     fclose(processedfile);
     secondpass(filename);
