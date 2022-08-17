@@ -97,7 +97,7 @@ void secondpass(char *filename)
                                     {
                                         if (strcmp(tok, temp->name) == 0)
                                         {
-                                            strcpy(strWord, convert_decimal_Binary(temp->address));
+                                           /* strcpy(strWord, convert_decimal_Binary(temp->address));*/
                                             notFound = false;
                                         }
                                     }
@@ -114,9 +114,9 @@ void secondpass(char *filename)
                             {
                                 if (isdigit(line[strlen(tok) - 1]))
                                 {
-                                    long dummy;
+                                   /* long dummy;
                                     dummy = strtol(tok, NULL, 0);
-                                    strcpy(strWord, convert_decimal_Binary(dummy));
+                                    strcpy(strWord, convert_decimal_Binary(dummy));*/
                                     continue;
                                 }
                             }

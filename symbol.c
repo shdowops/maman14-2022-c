@@ -7,8 +7,8 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     extern Symbol *head, *tail;
     Symbol *symNew = (Symbol *)malloc(sizeof(Symbol));
     Symbol *temp = head;
-    char *labelname = (char *)malloc(sizeof(label));
-    char *data = (char *)malloc(sizeof(line));
+    char *labelname = (char *)malloc(strlen(label));
+    char *data = (char *)malloc(strlen(line));
     strcpy(labelname, label);
     strcpy(data, line);
     if (!symNew || !labelname)
@@ -36,7 +36,7 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     }
     else if (is_Entry || is_Extern)
     {
-        symNew->address = 0;
+        symNew->address = -1;
     }
     else /* not data, not code, not entry and not extern ---> regular command*/
     {

@@ -40,7 +40,7 @@
 #define ER_DESTINATION_OPERAND "Destination operand does not exist"
 #define ER_SOURCE_OPERAND "Source operand does not exist"
 #define ER_OUT_OF_BOUND_STRUCT "Out of bound struct reference"
-/*#define ER_STRING_DECLARATION ".string declaration is illegal" */
+#define ER_NON_VALID_STRUCT "Not valid struct decleration"
 
 /*Data Errors*/
 #define ER_DATA_BEGINS_WITH_COMMA ".data starts with comma"
@@ -61,7 +61,7 @@
 
 
 /*General Errors*/
-#define ER_NUM_OUT_OF_RANGE "There is a distinct rang efor numbers. -256 to 256 is the range. The number you provided is out of this range"
+#define ER_NUM_OUT_OF_RANGE "There is a distinct range for numbers. -256 to 256 is the range. The number you provided is out of this range or not integer"
 #define ER_MEMORY_ALLOCATION "cannot allocate needed memory"
 #define ER_DATA_TYPE_INVALID "Data type is invalid"
 #define ER_SPACE_AFTER_COLON "A space is required after a colon"

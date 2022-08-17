@@ -7,23 +7,22 @@ char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "pr
 char *NoOperandCmd[] = {"rts", "hlt"};
 
 opcode opcodes[OPCODE_AMOUNT] = {
-{ 0		,	"mov"	,"0000"	,	TWO_OPERANDS },
-{ 1		,	"cmp"	,"0001"	,	TWO_OPERANDS },
-{ 2		,	"add"	,"0010",	TWO_OPERANDS },
-{ 3		,	"sub"	,"0011"	,	TWO_OPERANDS },
-{ 4		,	"not"	,"0100"	,	ONE_OPERAND },
-{ 5		,	"clr"	,"0101"	,	ONE_OPERAND },
-{ 6		,	"lea"	,"0110"	,	ONE_OPERAND },
-{ 7		,	"inc"	,"0111"	,	ONE_OPERAND },
-{ 8		,	"dec"	,"1000"	,	ONE_OPERAND },
-{ 9		,	"jmp"	,"1001"	,	ONE_OPERAND },
-{ 10	,	"bne"	,"1010"	,	ONE_OPERAND },
-{ 11	,	"get"	,"1011"	,	ONE_OPERAND },
-{ 12	,	"prn"	,"1100"	,	ONE_OPERAND },
-{ 13	,	"jsr"	,"1101"	,	ONE_OPERAND },
-{ 14	,	"rts"	,"1110"	,	NO_OPERANDS },
-{ 15	,	"hlt"	,"1111"	,	NO_OPERANDS }
-};
+    {0, "mov", "0000", TWO_OPERANDS},
+    {1, "cmp", "0001", TWO_OPERANDS},
+    {2, "add", "0010", TWO_OPERANDS},
+    {3, "sub", "0011", TWO_OPERANDS},
+    {4, "not", "0100", ONE_OPERAND},
+    {5, "clr", "0101", ONE_OPERAND},
+    {6, "lea", "0110", ONE_OPERAND},
+    {7, "inc", "0111", ONE_OPERAND},
+    {8, "dec", "1000", ONE_OPERAND},
+    {9, "jmp", "1001", ONE_OPERAND},
+    {10, "bne", "1010", ONE_OPERAND},
+    {11, "get", "1011", ONE_OPERAND},
+    {12, "prn", "1100", ONE_OPERAND},
+    {13, "jsr", "1101", ONE_OPERAND},
+    {14, "rts", "1110", NO_OPERANDS},
+    {15, "hlt", "1111", NO_OPERANDS}};
 
 char *filename;
 
@@ -76,7 +75,7 @@ bool check_label(char *labeltocheck, char *labeltosave)
 bool isLabel(char *line, char *label)
 {
   char *secondpart;
-  char *temp = (char *)malloc(sizeof(char) * strlen(line));
+  char *temp = (char *)malloc(strlen(line));
   strcpy(temp, line);
   temp = strtok(temp, LABELMARK);
   if (strcmp(line, temp) == 0) /*No label found*/
@@ -171,7 +170,7 @@ bool isRegister(char *line)
 bool isStruct(char *line)
 {
   char *token;
-  char *temp = malloc(sizeof(line));
+  char *temp = malloc(strlen(line));
   strcpy(temp, line);
   token = strtok(temp, SEPARATOR);
   token = strtok(NULL, SEPARATOR);
@@ -194,7 +193,7 @@ bool isStruct(char *line)
 bool isNumber(char *line)
 {
   char *token;
-  char *temp = malloc(sizeof(line));
+  char *temp = malloc(strlen(line));
   strcpy(temp, line);
   token = strtok(temp, NUMBERSTART);
   if (strcmp(token, temp) == 0)
@@ -216,18 +215,18 @@ char *getEntry(char *entryline)
 bool check_opcode(char *line, int *type, char *binarydata)
 {
   char *token;
-  line = strtok(line, ARGUMENT_SEPARATOR); /*get instruction */
-  strcat(binarydata, getopcode(line)); /*save instruction binary code */
+  line = strtok(line, ARGUMENT_SEPARATOR);  /*get instruction */
+  strcat(binarydata, getopcode(line));      /*save instruction binary code */
   line = strtok(NULL, ARGUMENT_SEPARATOR);  /*get first argument */
   token = strtok(NULL, ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
   {
-    if (!checkoperand(line,binarydata)) /*Check first operand*/
+    if (!checkoperand(line, binarydata)) /*Check first operand*/
     {
       alertError(ER_SOURCE_OPERAND);
       return false;
     }
-    if (!checkoperand(token,binarydata)) /*Check second operand*/
+    if (!checkoperand(token, binarydata)) /*Check second operand*/
     {
       alertError(ER_DESTINATION_OPERAND);
       return false;
@@ -237,53 +236,53 @@ bool check_opcode(char *line, int *type, char *binarydata)
   }
   else if (*type == ONE_OPERAND)
   {
-    strcat(binarydata,"00"); /*No source operand*/
-    if (line && !checkoperand(line,binarydata))
+    strcat(binarydata, "00"); /*No source operand*/
+    if (line && !checkoperand(line, binarydata))
     {
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
     IC++;
   }
-  else  /* No operands command*/
+  else /* No operands command*/
   {
     if (line != NULL)
     {
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
-    strcat(binarydata,"000000");
+    strcat(binarydata, "0000");
   }
 
   return true;
 }
 
-bool checkoperand(char *operand, char * binarydata)
+bool checkoperand(char *operand, char *binarydata)
 {
   if (!operand)
     return false;
-  
+
   if (isRegister(operand))
   {
-    strcat(binarydata,"11");
+    strcat(binarydata, "11");
     IC++;
     return true;
   }
   if (isStruct(operand))
   {
-    strcat(binarydata,"10");
+    strcat(binarydata, "10");
     IC += 2;
     return true;
   }
   if (isNumber(operand))
   {
-    strcat(binarydata,"00");
+    strcat(binarydata, "00");
     IC++;
     return true;
   }
   if (check_label(operand, NULL))
   {
-    strcat(binarydata,"01");
+    strcat(binarydata, "01");
     IC++;
     return true;
   }
@@ -330,70 +329,96 @@ bool isCommand(char *line, int *type)
 char *getopcode(char *line)
 {
   int i;
-  for(i=0;i<OPCODE_AMOUNT;i++)
-    if(strcmp(line, opcodes[i].name )==0)
+  for (i = 0; i < OPCODE_AMOUNT; i++)
+    if (strcmp(line, opcodes[i].name) == 0)
       break;
-  
-  return(opcodes[i].code);
+
+  return (opcodes[i].code);
 }
 
-int numOfTokens(char *tok)
+bool checkNumbers(char *line, char **binarydata)
 {
   int count = 0;
-  /* walk through other tokens */
-  while (tok != NULL)
-  {
-    count++;
-    tok = strtok(NULL, ARGUMENT_SEPARATOR);
-  }
-  return count;
-}
+  long currentnumber = 0;
+  char *tempbinarydata = (char *)malloc(BINARY_LENGTH);
 
-bool checkNumbers(char *line)
-{
-  int count = 0;
   if (line[START_OF_LINE] == COMMA)
   {
+    free(tempbinarydata);
     alertError(ER_DATA_BEGINS_WITH_COMMA);
     return false;
   }
   if (!isdigit(line[strlen(line) - 1]))
   {
+    free(tempbinarydata);
     alertError(ER_DATA_ENDS_WITHOUT_NUMBER);
     return false;
   }
   line = strtok(line, ARGUMENT_SEPARATOR);
-  while ((line = strtok(NULL, ARGUMENT_SEPARATOR)))
+  for (; line; line = strtok(NULL, ARGUMENT_SEPARATOR))
+  {
+    currentnumber = atol(line);
+    if (strstr(line, SEPARATOR) || currentnumber < MIN_NUMBER || currentnumber > MAX_NUMBER)
+    {
+      alertError(ER_NUM_OUT_OF_RANGE);
+      return false;
+    }
+    strcat(tempbinarydata, convert_decimal_binary(currentnumber));
+    printf("tempdata=%s\n",convert_decimal_binary(currentnumber));
+    strcat(tempbinarydata, "\n");
+    tempbinarydata = (char *)realloc(tempbinarydata, strlen(tempbinarydata) + BINARY_LENGTH +1);
     count++;
-
-  DC += count;
+  }
+  DC += count - 1;
+  *binarydata = tempbinarydata;
   return true;
 }
 
-bool checkString(char *line)
+bool checkString(char *line, char **binarydata)
 {
-  char *temp = strtok(line, "\"");
+  char *tempstring = NULL;
+  char *temp = strtok(line, STRUCT_STRING_START);
   if (strcmp(line, temp) == 0)
   {
+    free(tempstring);
     alertError(ER_STRING_WITHOUT_QUOTES);
     return false;
   }
-
-  while(*temp!='\0')
+  tempstring = (char *)malloc(BINARY_LENGTH);
+  while (*temp != '\0')
   {
-    /*convert to binary *temp */
+    strcat(tempstring, convert_decimal_binary(*temp));
+    strcat(tempstring, "\n");
+    tempstring = (char *)realloc(tempstring, strlen(tempstring) + BINARY_LENGTH + 1);
     temp++;
   }
 
   DC += strlen(line) - 1;
+  *binarydata = tempstring;
   return true;
 }
 
-bool checkStruct(char *line)
+bool checkStruct(char *line, char **binarydata)
 {
-  line = strtok(NULL, ARGUMENT_SEPARATOR);
-  DC += strlen(line);
-  return true;
+  char *structdata;
+  char *temp = (char *)malloc(strlen(line));
+  strcpy(temp, line);
+  line = strtok(NULL, ARGUMENT_SEPARATOR); /*Get struct string */
+  temp = strtok(temp, ARGUMENT_SEPARATOR); /*Get struct number */
+  if (checkNumbers(temp, binarydata))
+  {
+    temp = *binarydata;
+    if (checkString(line, binarydata))
+    {
+      structdata = (char *)malloc(strlen(temp) + strlen(*binarydata));
+      strcat(structdata, temp);
+      strcat(structdata, *binarydata);
+      *binarydata = structdata;
+      return true;
+    }
+  }
+  alertError(ER_NON_VALID_STRUCT);
+  return false;
 }
 
 /**
@@ -404,52 +429,30 @@ bool checkStruct(char *line)
   @res: the string which is the binary number.
 */
 
-char *convert_decimal_Binary(long num)
+char *convert_decimal_binary(long num)
 {
+  int currentbit, digit, i;
+  char *result;
 
-  long c, k;         /*Initializing variables to find the correct binary digit*/
-  char *res, chTwo; /*Initializing the String which will contain the binary number*/
+  i = 0;
+  result = (char *)malloc(BINARY_LENGTH);
 
-  /*Initializing the charachters for creating the binary number*/
-  char chOne = '1';
-  int i = 0; /*Counter for identifying if it is the first binary digit*/
-  res = NULL;
+  if (result == NULL)
+    alertError(ER_MEMORY_ALLOCATION);
 
-  /*For loop to find the proper binary digit*/
-  for (c = 31; c >= 0; c--)
+  for (currentbit = BINARY_LENGTH-2; currentbit >= 0; currentbit--)
   {
-    /*Locating proper binary digit*/
-    k = num >> c;
-    /*Checking if first binary digit*/
-    if (i == 0)
-    {
-      /*Checking what is the proper binary digit*/
-      if (k & 1)
-      {
-        strcpy(res,"1");
-      }
-      else
-      {
-        strcpy(res,"0");
-      }
+    digit = num >> currentbit;
 
-      i = 1; /*Updating that first binary digit had been found*/
-    }
-    /*If this is not the first binary digit*/
+    if (digit & 1)
+      *(result + i) = 1 + '0';
     else
-    {
-      /*Checking what is the proper binary digit*/
-      if (k & 1)
-      {
-        strncat(res, &chOne, 1); /*Adding the binary digit to the binary number*/
-      }
-      else
-      {
-        strncat(res, &chTwo, 1); /*Adding the binary digit to the binary number*/
-      }
-    }
-  }           /*End of for loop*/
-  return res; /*Return the binary number*/
+      *(result + i) = 0 + '0';
+    i++;
+  }
+  strcat(result, INSTRUCTION_ARE_BITS);
+  *(result + i) = '\0';
+  return result;
 }
 
 /** The method will recieve a string representing all digits for the bin number and will return according

@@ -5,6 +5,7 @@
 #define ENTRY_EXT ".ent"
 #define EXTERN_EXT ".ext"
 #define OBJECT_EXT ".ob"
+#define MAX_EXT_LENGTH 5
 #define SEPARATOR "."
 #define COMMA ','
 #define ARGUMENT_SEPARATOR " ,"
@@ -16,6 +17,8 @@
 #define STRUCT ".struct"
 #define LABELMARK ":"
 #define LINE_SPACE " "
+#define STRUCT_STRING_START "\""
+#define INSTRUCTION_ARE_BITS "00"
 #define OPCODE_LENGTH 5
 #define OPCODE_AMOUNT 16
 #define BINARY_LENGTH 11
@@ -27,7 +30,10 @@
 #define NO_OPERANDS 0
 #define ONE_OPERAND 1
 #define TWO_OPERANDS 2
+#define MIN_NUMBER -128
+#define MAX_NUMBER 127
 #define NUMBERSTART "#"
+#define NUMBERLENGTH 9
 #define STURCT_FIRST_ARG '1'
 #define STRUCT_SECOND_ARG '2'
 #include <string.h>
@@ -156,30 +162,26 @@ bool checkoperand(char *operand, char *binarydata);
 /*
 Description: Check if a number is valid
 */
-bool checkNumbers(char * line);
+bool checkNumbers(char * line, char **binarydata);
 
 /*
 Description: check that a string is valid
 */
-bool checkString(char * line);
+bool checkString(char * line, char **binarydata);
 
 /*
 Description: check that struct is valid.
 */
-bool checkStruct(char * line);
+bool checkStruct(char * line, char **binarydata);
 
 /*
 Description: Get opcode from line
 */
 char* getopcode(char * line);
 
-
-/*Assisting function for the isCommand Method.
- *This method checks how many operands there are in the line
- */
-int numOfTokens(char *tok);
-
-
-char *convert_decimal_Binary(long num);
+/*
+Description convert decimal number to binary
+*/
+char *convert_decimal_binary(long num);
 
 #endif
