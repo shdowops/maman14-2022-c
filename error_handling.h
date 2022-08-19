@@ -59,7 +59,6 @@
 #define ER_AFTER_EXTERN "After extern a space is needed"
 #define ER_EMPTY_ENTREY "Empty entry statement"
 
-
 /*General Errors*/
 #define ER_NUM_OUT_OF_RANGE "There is a distinct range for numbers. -256 to 256 is the range. The number you provided is out of this range or not integer"
 #define ER_MEMORY_ALLOCATION "cannot allocate needed memory"

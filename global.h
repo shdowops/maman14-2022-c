@@ -48,13 +48,13 @@ extern long IC, DC;
 extern long linenumber;
 extern char *filename;
 
-typedef struct opcode{
-	int decimal;
-	char* name;
-	char* code;
-	int type;
+typedef struct opcode
+{
+    int decimal;
+    char *name;
+    char *code;
+    int type;
 } opcode;
-
 
 /*
 Base32 - "!","@","#","$","%","^","&","*",">","<","a","b","c","d","e","f",
@@ -104,7 +104,6 @@ Description: check if string contains .struct
 */
 bool isStructDeclaration(char *line);
 
-
 /*
 Description: Check if line contains only whitespace characters
 */
@@ -127,7 +126,7 @@ char *trim(char *line);
 /*
 Description: check if opcode exists.
 */
-bool check_opcode(char *line, int *type, char *binarydata);
+bool check_opcode(char *line, int *type, char **binarydata);
 
 /*
 Description: check if label is keyword
@@ -152,32 +151,32 @@ bool isNumber(char *line);
 /*
 Description: check if it's a command.
 */
-bool isCommand(char *line, int * type);
+bool isCommand(char *line, int *type);
 
 /*
 Description: check the first operand
 */
-bool checkoperand(char *operand, char *binarydata);
+bool checkoperand(char *operand, char **binarydata);
 
 /*
 Description: Check if a number is valid
 */
-bool checkNumbers(char * line, char **binarydata);
+bool checkNumbers(char *line, char **binarydata);
 
 /*
 Description: check that a string is valid
 */
-bool checkString(char * line, char **binarydata);
+bool checkString(char *line, char **binarydata);
 
 /*
 Description: check that struct is valid.
 */
-bool checkStruct(char * line, char **binarydata);
+bool checkStruct(char *line, char **binarydata);
 
 /*
 Description: Get opcode from line
 */
-char* getopcode(char * line);
+char *getopcode(char *line);
 
 /**
  The method recieves an integer number and converts it into binary and returns the binary number as a String.

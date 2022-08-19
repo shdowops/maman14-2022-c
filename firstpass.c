@@ -8,11 +8,11 @@ void firstpass(char *filename)
 {
     int op_type;
     bool is_label, no_error, is_data, is_code, is_entry, is_extern;
-    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], binarydata[BINARY_LENGTH];
+    char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH];
     char *token, *savedbinarydata;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
-    IC = 100;
+    IC = 0;
     DC = 0;
     linenumber = 0;
     no_error = true;
@@ -27,7 +27,6 @@ void firstpass(char *filename)
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
         memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
-        memset(binarydata, 0, BINARY_LENGTH - 1);
         savedbinarydata = NULL;
         is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
@@ -72,11 +71,9 @@ void firstpass(char *filename)
         strcpy(token, trimmedline);
         token = strtok(token, ARGUMENT_SEPARATOR);                   /*get instruction*/
         no_error &= isCommand(token, &op_type);                      /* check instruction, if not exist, add error. */
-        no_error &= check_opcode(trimmedline, &op_type, binarydata); /*check operands and count them*/
+        no_error &= check_opcode(trimmedline, &op_type, &savedbinarydata); /*check operands and count them*/
         free(token);
-        strcat(binarydata, INSTRUCTION_ARE_BITS);
-        savedbinarydata = (char*)malloc(strlen(binarydata));
-        strcpy(savedbinarydata, binarydata);
+        strcat(savedbinarydata, INSTRUCTION_ARE_BITS);
         tail->binarydata = savedbinarydata;
     }
     /* Finished reading the file*/

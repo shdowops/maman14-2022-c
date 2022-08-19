@@ -65,7 +65,7 @@ void secondpass(char *filename)
                 {
                     char *tok;
                     char *strWord;
-                    strWord= NULL;
+                    strWord = NULL;
                     tok = strtok(trimmedline, LINE_SPACE);
 
                     if (kind == 1)
@@ -97,13 +97,13 @@ void secondpass(char *filename)
                                     {
                                         if (strcmp(tok, temp->name) == 0)
                                         {
-                                           /* strcpy(strWord, convert_decimal_Binary(temp->address));*/
+                                            /* strcpy(strWord, convert_decimal_Binary(temp->address));*/
                                             notFound = false;
                                         }
                                     }
                                     temp = temp->next;
                                 }
-                                if  (notFound)
+                                if (notFound)
                                 {
                                     alertError(ER_LABEL_IS_MISSING);
                                 }
@@ -114,9 +114,9 @@ void secondpass(char *filename)
                             {
                                 if (isdigit(line[strlen(tok) - 1]))
                                 {
-                                   /* long dummy;
-                                    dummy = strtol(tok, NULL, 0);
-                                    strcpy(strWord, convert_decimal_Binary(dummy));*/
+                                    /* long dummy;
+                                     dummy = strtol(tok, NULL, 0);
+                                     strcpy(strWord, convert_decimal_Binary(dummy));*/
                                     continue;
                                 }
                             }
@@ -127,7 +127,7 @@ void secondpass(char *filename)
                         tok = strtok(line, ARGUMENT_SEPARATOR);
                     }
                 }
-            } 
+            }
             continue;
 
             /* is data? string? struct? extern? */
@@ -143,9 +143,9 @@ void secondpass(char *filename)
         return;
 
     strtok(filename, SEPARATOR);
-    ent_fptr = fopen(strcat(filename, ENTRY_EXT),  "wb");
-    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT),  "wb");
-    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT),  "wb");
+    ent_fptr = fopen(strcat(filename, ENTRY_EXT), "wb");
+    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT), "wb");
+    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT), "wb");
 
     if (!ent_fptr || !ext_fptr || !obj_fptr)
     {

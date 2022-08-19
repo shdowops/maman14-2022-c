@@ -17,14 +17,14 @@ typedef struct Macro
  * @brief The function will process the code files and expand the macros in it.
  * The result will be save to a new file with .am extension.
  * @param codefile Pointer to the original file
- * @param filename the filename 
+ * @param filename the filename
  */
 void preprocessor(FILE *codefile, char *filename);
 
 /**
  * @brief The function checks if there's a macro in the line, if it does conatain a macro it will be expanded.
  * @param str The line
- * @param head The start of the 
+ * @param head The start of the
  * @return Pointer to the desired macro, NULL if it does not exist.
  */
 Macro *isMacro(char *str, Macro *head);
@@ -34,7 +34,7 @@ Macro *isMacro(char *str, Macro *head);
  * @param newMacro the new macro to be added
  * @param head the beginning of the list.
  */
-void  addToMacroList(Macro *newMacro,Macro *head);
+void addToMacroList(Macro *newMacro, Macro *head);
 
 /**
  * @brief The function will free the macro list.

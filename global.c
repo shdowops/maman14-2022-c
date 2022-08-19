@@ -212,11 +212,13 @@ char *getEntry(char *entryline)
   return token;
 }
 
-bool check_opcode(char *line, int *type, char *binarydata)
+bool check_opcode(char *line, int *type, char **binarydata)
 {
   char *token;
-  line = strtok(line, ARGUMENT_SEPARATOR);  /*get instruction */
-  strcat(binarydata, getopcode(line));     /*save instruction binary code */
+  line = strtok(line, ARGUMENT_SEPARATOR); /*get instruction */
+  *binarydata = (char *)malloc(BINARY_LENGTH);
+  memset(*binarydata, 0, BINARY_LENGTH);
+  strcat(*binarydata, getopcode(line));     /*save instruction binary code */
   line = strtok(NULL, ARGUMENT_SEPARATOR);  /*get first argument */
   token = strtok(NULL, ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
@@ -236,7 +238,7 @@ bool check_opcode(char *line, int *type, char *binarydata)
   }
   else if (*type == ONE_OPERAND)
   {
-    strcat(binarydata, "00"); /*No source operand*/
+    strcat(*binarydata, "00"); /*No source operand*/
     if (line && !checkoperand(line, binarydata))
     {
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
@@ -251,38 +253,38 @@ bool check_opcode(char *line, int *type, char *binarydata)
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
-    strcat(binarydata, "0000");
+    strcat(*binarydata, "0000");
   }
 
   return true;
 }
 
-bool checkoperand(char *operand, char *binarydata)
+bool checkoperand(char *operand, char **binarydata)
 {
   if (!operand)
     return false;
 
   if (isRegister(operand))
   {
-    strcat(binarydata, "11");
+    strcat(*binarydata, "11");
     IC++;
     return true;
   }
   if (isStruct(operand))
   {
-    strcat(binarydata, "10");
+    strcat(*binarydata, "10");
     IC += 2;
     return true;
   }
   if (isNumber(operand))
   {
-    strcat(binarydata, "00");
+    strcat(*binarydata, "00");
     IC++;
     return true;
   }
   if (check_label(operand, NULL))
   {
-    strcat(binarydata, "01");
+    strcat(*binarydata, "01");
     IC++;
     return true;
   }
@@ -404,12 +406,12 @@ bool checkStruct(char *line, char **binarydata)
   line = strtok(NULL, ARGUMENT_SEPARATOR); /*Get struct string */
   temp = strtok(temp, ARGUMENT_SEPARATOR); /*Get struct number */
   if (checkNumbers(temp, &number))
-    if(checkString(line, &text))
+    if (checkString(line, &text))
     {
-      *binarydata = (char*)malloc(strlen(number) + strlen(text));
-      memset(*binarydata,0,strlen(number) + strlen(text));
-      strcat(*binarydata,number);
-      strcat(*binarydata,text);
+      *binarydata = (char *)malloc(strlen(number) + strlen(text));
+      memset(*binarydata, 0, strlen(number) + strlen(text));
+      strcat(*binarydata, number);
+      strcat(*binarydata, text);
       return true;
     }
 

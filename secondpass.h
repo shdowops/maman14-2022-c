@@ -1,6 +1,6 @@
 #ifndef SECONDPASS_H
 #define SECONDPASS_H
-#define SQUARE(x) ((x)*(x))
+#define SQUARE(x) ((x) * (x))
 #include <stdio.h>
 
 #include "global.h"

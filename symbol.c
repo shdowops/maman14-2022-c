@@ -76,7 +76,7 @@ void print_symbol(Symbol *head)
         printf("is_entry: %d ", head->is_Entry);
         printf("is_extern: %d ", head->is_Extern);
         printf("data: %s ", head->data);
-        printf("binarydate: %s ",head->binarydata);
+        printf("binarydate: %s ", head->binarydata);
         printf("\n");
         head = head->next;
     }
