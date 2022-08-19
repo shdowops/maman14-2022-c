@@ -37,7 +37,7 @@ void preprocessor(FILE *codefile, char *filename)
                     continue;
                 }
                 newMacro = (Macro *)malloc(sizeof(Macro));
-                name = (char *)malloc(sizeof(token));
+                name = (char *)malloc(strlen(token));
                 strcpy(name, token);
                 newMacro->name = name;
                 if (firstmacro)
@@ -97,5 +97,6 @@ void freeMacros(Macro *head)
     if (head->next)
         freeMacros(head->next);
 
+    free(head->name);
     free(head);
 }

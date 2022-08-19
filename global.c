@@ -216,7 +216,7 @@ bool check_opcode(char *line, int *type, char *binarydata)
 {
   char *token;
   line = strtok(line, ARGUMENT_SEPARATOR);  /*get instruction */
-  strcat(binarydata, getopcode(line));      /*save instruction binary code */
+  strcat(binarydata, getopcode(line));     /*save instruction binary code */
   line = strtok(NULL, ARGUMENT_SEPARATOR);  /*get first argument */
   token = strtok(NULL, ARGUMENT_SEPARATOR); /*get second argument */
   if (*type == TWO_OPERANDS)
@@ -341,7 +341,7 @@ bool checkNumbers(char *line, char **binarydata)
   int count = 0;
   long currentnumber = 0;
   char *tempbinarydata = (char *)malloc(BINARY_LENGTH);
-
+  memset(tempbinarydata, 0, BINARY_LENGTH);
   if (line[START_OF_LINE] == COMMA)
   {
     free(tempbinarydata);
@@ -364,9 +364,8 @@ bool checkNumbers(char *line, char **binarydata)
       return false;
     }
     strcat(tempbinarydata, convert_decimal_binary(currentnumber));
-    printf("tempdata=%s\n",convert_decimal_binary(currentnumber));
     strcat(tempbinarydata, "\n");
-    tempbinarydata = (char *)realloc(tempbinarydata, strlen(tempbinarydata) + BINARY_LENGTH +1);
+    tempbinarydata = (char *)realloc(tempbinarydata, strlen(tempbinarydata) + BINARY_LENGTH + 1);
     count++;
   }
   DC += count - 1;
@@ -376,58 +375,47 @@ bool checkNumbers(char *line, char **binarydata)
 
 bool checkString(char *line, char **binarydata)
 {
-  char *tempstring = NULL;
+
   char *temp = strtok(line, STRUCT_STRING_START);
   if (strcmp(line, temp) == 0)
   {
-    free(tempstring);
     alertError(ER_STRING_WITHOUT_QUOTES);
     return false;
   }
-  tempstring = (char *)malloc(BINARY_LENGTH);
+
+  *binarydata = (char *)malloc(BINARY_LENGTH);
+  memset(*binarydata, 0, BINARY_LENGTH);
   while (*temp != '\0')
   {
-    strcat(tempstring, convert_decimal_binary(*temp));
-    strcat(tempstring, "\n");
-    tempstring = (char *)realloc(tempstring, strlen(tempstring) + BINARY_LENGTH + 1);
+    strcat(*binarydata, convert_decimal_binary(*temp));
+    strcat(*binarydata, "\n");
+    /*binarydata = (char *)realloc(binarydata, (sizeof(char) * strlen(binarydata)) + BINARY_LENGTH);*/
     temp++;
   }
-
-  DC += strlen(line) - 1;
-  *binarydata = tempstring;
+  DC += strlen(temp);
   return true;
 }
 
 bool checkStruct(char *line, char **binarydata)
 {
-  char *structdata;
+  char *number, *text;
   char *temp = (char *)malloc(strlen(line));
   strcpy(temp, line);
   line = strtok(NULL, ARGUMENT_SEPARATOR); /*Get struct string */
   temp = strtok(temp, ARGUMENT_SEPARATOR); /*Get struct number */
-  if (checkNumbers(temp, binarydata))
-  {
-    temp = *binarydata;
-    if (checkString(line, binarydata))
+  if (checkNumbers(temp, &number))
+    if(checkString(line, &text))
     {
-      structdata = (char *)malloc(strlen(temp) + strlen(*binarydata));
-      strcat(structdata, temp);
-      strcat(structdata, *binarydata);
-      *binarydata = structdata;
+      *binarydata = (char*)malloc(strlen(number) + strlen(text));
+      memset(*binarydata,0,strlen(number) + strlen(text));
+      strcat(*binarydata,number);
+      strcat(*binarydata,text);
       return true;
     }
-  }
+
   alertError(ER_NON_VALID_STRUCT);
   return false;
 }
-
-/**
- The method recieves an integer number and converts it into binary and returns the binary number as a String.
-  input params:
-  @num: the number that will be converted to binary.
-  returns
-  @res: the string which is the binary number.
-*/
 
 char *convert_decimal_binary(long num)
 {
@@ -435,12 +423,12 @@ char *convert_decimal_binary(long num)
   char *result;
 
   i = 0;
-  result = (char *)malloc(BINARY_LENGTH);
+  result = (char *)malloc(BINARY_LENGTH); /* allocate 10 bytes for binary representation of number */
 
   if (result == NULL)
     alertError(ER_MEMORY_ALLOCATION);
 
-  for (currentbit = BINARY_LENGTH-2; currentbit >= 0; currentbit--)
+  for (currentbit = BINARY_LENGTH - 2; currentbit >= 0; currentbit--)
   {
     digit = num >> currentbit;
 
@@ -454,23 +442,3 @@ char *convert_decimal_binary(long num)
   *(result + i) = '\0';
   return result;
 }
-
-/** The method will recieve a string representing all digits for the bin number and will return according
-to memory location.
-input param:
-@str: the original number in binary form
-returns:
-@res: the string representing the "chopped" location in the memory
-
-
-char *chop_string_for_address(char str[])
-{
-  char res[5]; Initializing the returned string
-  creating the string
-  res[0] = str[28];
-  res[1] = str[29];
-  res[2] = str[30];
-  res[3] = str[31];
-  res[4] = '\0';
-  return res; return the desired address
-}*/

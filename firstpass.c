@@ -12,11 +12,10 @@ void firstpass(char *filename)
     char *token, *savedbinarydata;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
-    IC = 0;
+    IC = 100;
     DC = 0;
     linenumber = 0;
     no_error = true;
-    savedbinarydata = NULL;
 
     /*read next line from file*/
     if (processedfile == NULL)
@@ -28,7 +27,8 @@ void firstpass(char *filename)
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
         memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
-        memset(binarydata,0,BINARY_LENGTH -1);
+        memset(binarydata, 0, BINARY_LENGTH - 1);
+        savedbinarydata = NULL;
         is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
         strcpy(trimmedline, trim(line));
@@ -40,7 +40,6 @@ void firstpass(char *filename)
         if ((is_data = isDataSymbol(trimmedline))) /*is it .data? .string? .struct? */
             if (is_label)
             {
-                savedbinarydata = NULL;
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
                 token = strtok(trimmedline, LINE_SPACE);
                 token = trim(strtok(NULL, LINE_SPACE));
@@ -51,7 +50,7 @@ void firstpass(char *filename)
                 else
                     no_error &= checkStruct(token, &savedbinarydata);
                 
-                savedbinarydata[strlen(savedbinarydata)-1] = '\0';
+                savedbinarydata[strlen(savedbinarydata) - 1] = '\0';
                 tail->binarydata = savedbinarydata;
                 continue;
             }
@@ -61,7 +60,7 @@ void firstpass(char *filename)
             if (is_extern)
             {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
-                tail->binarydata = savedbinarydata;
+                tail->binarydata = NULL;
             }
             continue;
         }
@@ -69,15 +68,15 @@ void firstpass(char *filename)
         is_code = true; /*all conditions failed - so it's code line*/
 
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
-        token = (char *)malloc(strlen(trimmedline));
+        token = (char *)malloc(sizeof(char *) * strlen(trimmedline));
         strcpy(token, trimmedline);
         token = strtok(token, ARGUMENT_SEPARATOR);                   /*get instruction*/
         no_error &= isCommand(token, &op_type);                      /* check instruction, if not exist, add error. */
         no_error &= check_opcode(trimmedline, &op_type, binarydata); /*check operands and count them*/
         free(token);
+        strcat(binarydata, INSTRUCTION_ARE_BITS);
         savedbinarydata = (char*)malloc(strlen(binarydata));
-        strcat(binarydata,INSTRUCTION_ARE_BITS);
-        strcpy(savedbinarydata,binarydata);
+        strcpy(savedbinarydata, binarydata);
         tail->binarydata = savedbinarydata;
     }
     /* Finished reading the file*/

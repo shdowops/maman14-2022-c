@@ -23,7 +23,7 @@
 #define OPCODE_AMOUNT 16
 #define BINARY_LENGTH 11
 #define MAX_LINE_LENGTH 81
-#define MAX_LABEL_LENGTH 30
+#define MAX_LABEL_LENGTH 31
 #define START_OF_LINE 0
 #define NUM_OF_REGISTERS 8
 #define NUM_OF_KEYWORDS 21
@@ -179,8 +179,11 @@ Description: Get opcode from line
 */
 char* getopcode(char * line);
 
-/*
-Description convert decimal number to binary
+/**
+ The method recieves an integer number and converts it into binary and returns the binary number as a String.
+  input params:
+  @num: the number that will be converted to binary.
+  returns the string which is the binary number.
 */
 char *convert_decimal_binary(long num);
 
