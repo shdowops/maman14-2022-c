@@ -7,22 +7,22 @@ char *SingleOperandCmd[] = {"not", "clr", "inc", "dec", "jmp", "bne", "get", "pr
 char *NoOperandCmd[] = {"rts", "hlt"};
 
 opcode opcodes[OPCODE_AMOUNT] = {
-    {0, "mov", "0000", TWO_OPERANDS},
-    {1, "cmp", "0001", TWO_OPERANDS},
-    {2, "add", "0010", TWO_OPERANDS},
-    {3, "sub", "0011", TWO_OPERANDS},
-    {4, "not", "0100", ONE_OPERAND},
-    {5, "clr", "0101", ONE_OPERAND},
-    {6, "lea", "0110", ONE_OPERAND},
-    {7, "inc", "0111", ONE_OPERAND},
-    {8, "dec", "1000", ONE_OPERAND},
-    {9, "jmp", "1001", ONE_OPERAND},
-    {10, "bne", "1010", ONE_OPERAND},
-    {11, "get", "1011", ONE_OPERAND},
-    {12, "prn", "1100", ONE_OPERAND},
-    {13, "jsr", "1101", ONE_OPERAND},
-    {14, "rts", "1110", NO_OPERANDS},
-    {15, "hlt", "1111", NO_OPERANDS}};
+    {0, "mov", "0000"},
+    {1, "cmp", "0001"},
+    {2, "add", "0010"},
+    {3, "sub", "0011"},
+    {4, "not", "0100"},
+    {5, "clr", "0101"},
+    {6, "lea", "0110"},
+    {7, "inc", "0111"},
+    {8, "dec", "1000"},
+    {9, "jmp", "1001"},
+    {10, "bne", "1010"},
+    {11, "get", "1011"},
+    {12, "prn", "1100"},
+    {13, "jsr", "1101"},
+    {14, "rts", "1110"},
+    {15, "hlt", "1111"}};
 
 char *filename;
 
@@ -117,16 +117,12 @@ char *trim(char *line)
 
 bool isEntry(char *line)
 {
-  if (strstr(line, ENTRY))
-    return true;
-  return false;
+  return strstr(line, ENTRY);
 }
 
 bool isExtern(char *line)
 {
-  if (strstr(line, EXTERN))
-    return true;
-  return false;
+  return strstr(line, EXTERN);
 }
 
 bool isDataSymbol(char *line)
@@ -244,7 +240,6 @@ bool check_opcode(char *line, int *type, char **binarydata)
       alertError(ER_OPERANDS_OVERFLOW_IN_COMMAND);
       return false;
     }
-    IC++;
   }
   else /* No operands command*/
   {
@@ -357,6 +352,7 @@ bool checkNumbers(char *line, char **binarydata)
     return false;
   }
   line = strtok(line, ARGUMENT_SEPARATOR);
+
   for (; line; line = strtok(NULL, ARGUMENT_SEPARATOR))
   {
     currentnumber = atol(line);
@@ -370,7 +366,7 @@ bool checkNumbers(char *line, char **binarydata)
     tempbinarydata = (char *)realloc(tempbinarydata, strlen(tempbinarydata) + BINARY_LENGTH + 1);
     count++;
   }
-  DC += count - 1;
+  DC += count;
   *binarydata = tempbinarydata;
   return true;
 }
@@ -387,14 +383,14 @@ bool checkString(char *line, char **binarydata)
 
   *binarydata = (char *)malloc(BINARY_LENGTH);
   memset(*binarydata, 0, BINARY_LENGTH);
+  DC += strlen(temp) +1;
   while (*temp != '\0')
   {
     strcat(*binarydata, convert_decimal_binary(*temp));
     strcat(*binarydata, "\n");
-    /*binarydata = (char *)realloc(binarydata, (sizeof(char) * strlen(binarydata)) + BINARY_LENGTH);*/
+    *binarydata = (char *)realloc(*binarydata, (sizeof(char) * strlen(*binarydata)) + BINARY_LENGTH+1);
     temp++;
   }
-  DC += strlen(temp);
   return true;
 }
 
@@ -440,7 +436,7 @@ char *convert_decimal_binary(long num)
       *(result + i) = 0 + '0';
     i++;
   }
-  strcat(result, INSTRUCTION_ARE_BITS);
+  strcat(result, ABSOLUTE);
   *(result + i) = '\0';
   return result;
 }

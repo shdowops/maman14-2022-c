@@ -1,17 +1,19 @@
 #include "secondpass.h"
-extern long IC, DC;
+extern long IC, DC, linenumber;
 extern Symbol *head, *tail;
 extern char *Registers[NUM_OF_REGISTERS];
 int binary_converter(char binary[]);
 void secondpass(char *filename)
 {
-    char line[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *trimmedline;
-    bool is_error;
-    int kind;
-    bool no_error, is_data, is_code, is_entry, is_extern;
+    int op_type;
+    char line[MAX_LINE_LENGTH];
+    char *firstoperand, *secondoperand, *trimmedline, *token, *binarydata;
+    bool no_error;
     FILE *ent_fptr, *ext_fptr, *obj_fptr;
     FILE *processedfile = fopen(filename, "r");
-    memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
+    Symbol *toupdate;
+    linenumber = 0;
+    ent_fptr = ext_fptr = obj_fptr = NULL;
 
     if (processedfile == NULL) /*If file was not opened*/
     {
@@ -20,153 +22,226 @@ void secondpass(char *filename)
     else /*File was opened*/
     {
         IC = 0;
-        is_error = false;
+        no_error = true;
         /*read next line from file*/
         while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
         {
+            ++linenumber;
             trimmedline = trim(line);
+            token = (char *)malloc(strlen(trimmedline));
+            strcpy(token, trimmedline);
             if (isEmptyLine(trimmedline) || isComment(trimmedline))
                 continue;
 
             /* is label ?*/
-            isLabel(trimmedline, label);
+            if (isLabel(trimmedline, NULL))
+            {
+                token = strtok(token, ARGUMENT_SEPARATOR);
+                token = strtok(NULL, ARGUMENT_SEPARATOR);
+            }
+            else
+                token = strtok(token, ARGUMENT_SEPARATOR);
 
             /* is data? string? struct? extern? */
             if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStructDeclaration(trimmedline))
                 continue;
 
             /* is entry */
-
             if (isEntry(trimmedline))
             {
                 char *entry;
-                is_data = is_code = is_entry = is_extern = false;
                 entry = getEntry(trimmedline);
                 if (entry == NULL)
-                    alertError(ER_EMPTY_ENTREY);
-                else
                 {
-                    is_entry = true;
-                    no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
+                    alertError(ER_EMPTY_ENTREY);
+                    no_error = false;
                 }
+                else
+                    update_entry_symbol(head, entry);
                 continue;
             }
-
             /* finish encoding operands*/
+            isCommand(token, &op_type);                       /*Get command type */
+            token = strtok(NULL, ARGUMENT_SEPARATOR);         /*get first operand of the insturction */
+            toupdate = findsymbol(head, IC);                  /*Find the symbol to be updated by IC */
+            IC++;                                             /*Move IC by one for the command */
+            firstoperand = token;                             /*Get first operand */
+            secondoperand = strtok(NULL, ARGUMENT_SEPARATOR); /*Get second operand*/
+            binarydata = toupdate->binarydata;
 
-            if (isEmptyLine(trimmedline) || isComment(trimmedline))
-                continue;
-
-            if (isLabel(trimmedline, label))
-
-                kind = 0;
-            if (isCommand(trimmedline, &kind))
+            /*Check operands by command type*/
+            if (op_type == TWO_OPERANDS)
             {
-                if (kind != 0)
+                if (isRegister(firstoperand))
                 {
-                    char *tok;
-                    char *strWord;
-                    strWord = NULL;
-                    tok = strtok(trimmedline, LINE_SPACE);
-
-                    if (kind == 1)
+                    strcat(binarydata, "\n");
+                    no_error &= operand_to_binary(firstoperand, toupdate);
+                    if (isRegister(secondoperand))
                     {
-                        if (isRegister(tok))
-                        {
-                            int j;
-                            char *transRegister[8] = {"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111"};
-                            for (j = 0; j < 8; j++)
-                            {
-                                if (strcmp(tok, Registers[j]) == 0)
-                                {
-                                    strcpy(strWord, transRegister[j]);
-                                }
-                            }
-                            continue;
-                        }
-                        else
-                        {
-                            if (isLabel(trimmedline, tok))
-                            {
-                                bool notFound = true;
-                                Symbol *temp;
-                                temp = head;
-                                while (temp->next != NULL)
-                                {
-
-                                    if (strcmp(temp->name, "\0") != 0)
-                                    {
-                                        if (strcmp(tok, temp->name) == 0)
-                                        {
-                                            /* strcpy(strWord, convert_decimal_Binary(temp->address));*/
-                                            notFound = false;
-                                        }
-                                    }
-                                    temp = temp->next;
-                                }
-                                if (notFound)
-                                {
-                                    alertError(ER_LABEL_IS_MISSING);
-                                }
-
-                                continue;
-                            }
-                            else
-                            {
-                                if (isdigit(line[strlen(tok) - 1]))
-                                {
-                                    /* long dummy;
-                                     dummy = strtol(tok, NULL, 0);
-                                     strcpy(strWord, convert_decimal_Binary(dummy));*/
-                                    continue;
-                                }
-                            }
-                        }
+                        IC--;
+                        no_error &= operand_to_binary(secondoperand, toupdate);
+                        strcat(binarydata, ABSOLUTE);
+                        continue;
                     }
                     else
-                    {
-                        tok = strtok(line, ARGUMENT_SEPARATOR);
-                    }
+                        strcat(binarydata, "000000");
                 }
-            }
-            continue;
+                if (!isRegister(firstoperand))
+                    no_error &= operand_to_binary(firstoperand, toupdate);
 
-            /* is data? string? struct? extern? */
-            if (isDataSymbol(trimmedline) || isExtern(trimmedline) || isStruct(trimmedline))
+                binarydata = toupdate->binarydata; /*get updated binary data after first operand*/
+
+                if (isRegister(secondoperand))
+                {
+                    strcat(binarydata, "\n0000");
+                    no_error &= operand_to_binary(secondoperand, toupdate);
+                    strcat(binarydata, ABSOLUTE);
+                    continue;
+                }
+                no_error &= operand_to_binary(secondoperand, toupdate);
+            }
+            else if (op_type == ONE_OPERAND)
+                no_error &= operand_to_binary(firstoperand, toupdate);
+            else
                 continue;
-            /*IC = IC + L;*/
         }
     }
+
     /* end reading file */
 
-    if (is_error)
-        /*print error*/
+    if (!no_error)
         return;
 
+    print_symbol(head);
     strtok(filename, SEPARATOR);
-    ent_fptr = fopen(strcat(filename, ENTRY_EXT), "wb");
-    ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT), "wb");
-    obj_fptr = fopen(strcat(strtok(filename, SEPARATOR), OBJECT_EXT), "wb");
+    obj_fptr = fopen(strcat(filename, OBJECT_EXT), "wb");
+    /*save_files(ent_fptr, ext_fptr, obj_fptr, filename);
 
-    if (!ent_fptr || !ext_fptr || !obj_fptr)
-    {
-        alertError(ER_OPEN_FILE);
-        return;
-    }
-
-    /* save files */
-    save_files(ent_fptr, ext_fptr, obj_fptr);
+    if(ent_fptr)
+        fclose(ent_fptr);
+    if(ext_fptr)
+        fclose(ext_fptr);
+    fclose(obj_fptr); */
 }
 
-void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr)
+bool operand_to_binary(char *operand, Symbol *toupdate)
 {
-    fclose(ent_fptr);
-    fclose(ext_fptr);
-    fclose(obj_fptr);
+    Symbol *structaddress, *getaddress;
+    char *binarydata = toupdate->binarydata;
+    if (isRegister(operand)) /* check if operand is register */
+    {
+        binarydata = realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
+        strcat(binarydata, (convert_decimal_binary(operand[1] - '0') + 6));
+        toupdate->binarydata = binarydata;
+        IC++;
+        return true;
+    }
+
+    if (isStruct(operand)) /* check if operand is struct */
+    {
+        IC += 2;
+        operand = strtok(operand, SEPARATOR);
+        structaddress = findname(head, operand);
+        if (!structaddress)
+        {
+
+            alertError(ER_NO_STRUCT_DECLARED);
+            return false;
+        }
+        /*Add Struct address*/
+        binarydata = (char *)realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
+        strcat(binarydata, "\n");
+        strcat(binarydata, (convert_decimal_binary(structaddress->address) + 2));
+        strcat(binarydata, RELOCATABLE);
+
+        /*Add struct field*/
+        operand = strtok(NULL, SEPARATOR);
+        binarydata = (char *)realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
+        strcat(binarydata, "\n");
+        strcat(binarydata, (convert_decimal_binary(atol(operand)) + 2));
+        strcat(binarydata, ABSOLUTE);
+        toupdate->binarydata = binarydata;
+        return true;
+    }
+
+    if (isNumber(operand)) /* check if operand is a number */
+    {
+        operand = strtok(operand, NUMBERSTART);
+        binarydata = (char *)realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
+        strcat(binarydata, "\n");
+        strcat(binarydata, (convert_decimal_binary(atol(operand)) + 2));
+        strcat(binarydata, ABSOLUTE);
+        toupdate->binarydata = binarydata;
+        IC++;
+        return true;
+    }
+
+    /*Check if valid label and exists*/
+    IC++;
+    getaddress = findname(head, operand);
+    if (!getaddress)
+    {
+        alertError(ER_LABEL_NOT_DEFINED);
+        return false;
+    }
+    binarydata = (char *)realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
+    strcat(binarydata, "\n");
+    if (getaddress->address == -1)
+    {
+        strcat(binarydata, "00000000");
+        strcat(binarydata, EXTERNAL);
+    }
+    else
+    {
+        strcat(binarydata, (convert_decimal_binary(getaddress->address) + 2));
+        strcat(binarydata, RELOCATABLE);
+    }
+    toupdate->binarydata = binarydata;
+    return true;
+}
+
+void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr, char *filename)
+{
+    Symbol *temp = head;
+    while (temp != NULL)
+    {
+        if (temp->binarydata)
+        {
+            char res[2];
+            printf("translated = %s\n", translated(temp->binarydata, res));
+        }
+
+        if (temp->is_Entry)
+        {
+            if (!ent_fptr)
+                ent_fptr = fopen(strcat(strtok(filename, SEPARATOR), ENTRY_EXT), "wb");
+
+            /*Need to convert the address to base 32 */
+            long textsize = strlen(temp->name) + 15;
+            char *completeline = (char *)malloc(textsize);
+            memset(completeline, 0, textsize);
+            fputs(temp->name, ent_fptr);
+            fputs("\t", ent_fptr);
+            fputs("!!", ent_fptr);
+            fputs("\n", ent_fptr);
+            temp = temp->next;
+            continue;
+        }
+
+        /*if (temp->is_Extern)
+        {
+            if (!ext_fptr)
+                ext_fptr = fopen(strcat(strtok(filename, SEPARATOR), EXTERN_EXT), "wb");
+            fputs(temp->data, ext_fptr);
+            fputs("\t", ext_fptr);
+            fputs("\n", ext_fptr);
+        }*/
+        temp = temp->next;
+    }
 }
 
 /*Translate to 32 bits*/
-char *translated(char line[], char res[2])
+char *translated(char line[], char *res)
 {
     char first[5];
     char second[5];
@@ -183,8 +258,9 @@ char *translated(char line[], char res[2])
     {
         second[i] = line[i];
     }
-    numOne = binary_converter(first)-1;
-    numTwo = binary_converter(second)-1;
+    numOne = binary_converter(first);
+    numTwo = binary_converter(second);
+    printf("numone=%d , numtwo:%d \n", numOne, numTwo);
     res[0] = language[numOne];
     res[1] = language[numTwo];
     return res;
@@ -199,10 +275,11 @@ int binary_converter(char binary[])
     int index = length - 1;
     while (index >= 0)
     {
+        printf("binary[index]: %c\n", binary[index]);
         decimal = decimal + (binary[index] - 48) * SQUARE(position);
         index--;
         position++;
     }
-    decimal=(decimal)/2;
+    decimal = (decimal) / 2;
     return decimal;
 }

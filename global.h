@@ -18,7 +18,9 @@
 #define LABELMARK ":"
 #define LINE_SPACE " "
 #define STRUCT_STRING_START "\""
-#define INSTRUCTION_ARE_BITS "00"
+#define ABSOLUTE "00"
+#define EXTERNAL "01"
+#define RELOCATABLE "10"
 #define OPCODE_LENGTH 5
 #define OPCODE_AMOUNT 16
 #define BINARY_LENGTH 11

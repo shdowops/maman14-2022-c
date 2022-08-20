@@ -48,7 +48,7 @@ void firstpass(char *filename)
                     no_error &= checkString(token, &savedbinarydata);
                 else
                     no_error &= checkStruct(token, &savedbinarydata);
-                
+
                 savedbinarydata[strlen(savedbinarydata) - 1] = '\0';
                 tail->binarydata = savedbinarydata;
                 continue;
@@ -58,22 +58,23 @@ void firstpass(char *filename)
         {
             if (is_extern)
             {
-                no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
+                token = strtok(trimmedline, ARGUMENT_SEPARATOR);
+                token = strtok(NULL, ARGUMENT_SEPARATOR);
+                no_error &= add_symbol(token, token, is_code, is_data, is_entry, is_extern);
                 tail->binarydata = NULL;
             }
             continue;
         }
 
         is_code = true; /*all conditions failed - so it's code line*/
-
         no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
         token = (char *)malloc(sizeof(char *) * strlen(trimmedline));
         strcpy(token, trimmedline);
-        token = strtok(token, ARGUMENT_SEPARATOR);                   /*get instruction*/
-        no_error &= isCommand(token, &op_type);                      /* check instruction, if not exist, add error. */
+        token = strtok(token, ARGUMENT_SEPARATOR);                      /*get instruction*/
+        no_error &= isCommand(token, &op_type);                            /* check instruction, if not exist, add error. */
         no_error &= check_opcode(trimmedline, &op_type, &savedbinarydata); /*check operands and count them*/
         free(token);
-        strcat(savedbinarydata, INSTRUCTION_ARE_BITS);
+        strcat(savedbinarydata, ABSOLUTE);
         tail->binarydata = savedbinarydata;
     }
     /* Finished reading the file*/
@@ -81,10 +82,9 @@ void firstpass(char *filename)
         return;
     /* update symbol list data adding the right IC */
     updateData(head);
-    print_symbol(head);
-    /*Start second pass*/
     fclose(processedfile);
-    /*secondpass(filename);*/
+    /*Start second pass*/
+    secondpass(filename);
 }
 
 void updateData(Symbol *head)

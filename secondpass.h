@@ -9,4 +9,10 @@ void secondpass(char *filename);
 
 int binary_converter(char binary[]);
 
-void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr);
+void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr, char* filename);
+
+int binary_converter(char binary[]);
+
+char *translated(char line[], char * res);
+
+bool operand_to_binary(char * firstoperand, Symbol *toupdate);

@@ -55,6 +55,30 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
 void print_symbol(Symbol *head);
 
 /**
+ * @brief Finds a symbol by address
+ * 
+ * @param head 
+ * @return Symbol* 
+ */
+Symbol *findsymbol(Symbol *head, long address);
+
+/**
+ * @brief Finds a symbol by name
+ * 
+ * @param head 
+ * @return Symbol* 
+ */
+Symbol *findname(Symbol *head, char *name);
+
+/**
+ * @brief Finds a symbol to get the relevant address.
+ * 
+ * @param head 
+ * @return Symbol* 
+ */
+void update_entry_symbol(Symbol *head, char * text);
+
+/**
  * @brief
  *
  * @param line Trimmed line after command, data, struct or string.

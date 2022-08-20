@@ -27,7 +27,6 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     if (is_Data)
     {
         symNew->address = DC;
-        DC++;
     }
     else if (is_Code)
     {
@@ -63,6 +62,42 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     tail->next = symNew;
     tail = tail->next;
     return true;
+}
+
+Symbol *findsymbol(Symbol *head, long address)
+{
+    while (head != NULL)
+    {
+        if (head->address == address)
+            return head;
+        head = head->next;
+    }
+    return NULL;
+}
+
+Symbol *findname(Symbol *head, char *name)
+{
+
+    while (head != NULL)
+    {
+        if (strcmp(head->name,name)==0)
+            return head;
+        head = head->next;
+    }
+    return NULL;
+}
+
+void update_entry_symbol(Symbol *head, char *text)
+{
+    while (head != NULL)
+    {
+        if (strcmp(head->name, text)==0)
+        {
+            head->is_Entry = true;
+            return;
+        }
+        head = head->next;
+    }
 }
 
 void print_symbol(Symbol *head)

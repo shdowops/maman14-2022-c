@@ -41,6 +41,7 @@
 #define ER_SOURCE_OPERAND "Source operand does not exist"
 #define ER_OUT_OF_BOUND_STRUCT "Out of bound struct reference"
 #define ER_NON_VALID_STRUCT "Not valid struct decleration"
+#define ER_NO_STRUCT_DECLARED "There is no such sturct declared"
 
 /*Data Errors*/
 #define ER_DATA_BEGINS_WITH_COMMA ".data starts with comma"
