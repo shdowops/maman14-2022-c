@@ -183,8 +183,8 @@ char *translated(char line[], char res[2])
     {
         second[i] = line[i];
     }
-    numOne = binary_converter(first);
-    numTwo = binary_converter(second);
+    numOne = binary_converter(first)-1;
+    numTwo = binary_converter(second)-1;
     res[0] = language[numOne];
     res[1] = language[numTwo];
     return res;
