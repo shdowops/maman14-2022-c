@@ -2,6 +2,7 @@
 extern long IC, DC;
 extern Symbol *head, *tail;
 extern char *Registers[NUM_OF_REGISTERS];
+int binary_converter(char binary[]);
 void secondpass(char *filename)
 {
     char line[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH], *trimmedline;
@@ -202,5 +203,6 @@ int binary_converter(char binary[])
         index--;
         position++;
     }
+    decimal=(decimal)/2;
     return decimal;
 }
