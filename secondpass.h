@@ -1,6 +1,6 @@
 #ifndef SECONDPASS_H
 #define SECONDPASS_H
-#define SQUARE(x) ((x) * (x))
+#define SQUARE(x) (1 << (x))
 #include <stdio.h>
 
 #include "global.h"
@@ -17,11 +17,10 @@ int binary_converter(char binary[]);
 /**
  * @brief The method saves the base32 output to the required files
  * @param ent_fptr - Pointer to entry file
- * @param ext_fptr - Pointer to external file
  * @param obj_fptr - Pointer to object file
  * @param filename - The filename
  */
-void save_files(FILE *ent_fptr, FILE *ext_fptr, FILE *obj_fptr, char *filename);
+void save_files(FILE *ent_fptr, FILE *obj_fptr, char *filename);
 
 /** The method recieves 2 binary numbers in a string format and converts it into a base 32
  * @param line 2 binary numbers in the formation of a string

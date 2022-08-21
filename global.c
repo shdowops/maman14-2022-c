@@ -400,6 +400,8 @@ bool checkString(char *line, char **binarydata)
     *binarydata = (char *)realloc(*binarydata, (sizeof(char) * strlen(*binarydata)) + BINARY_LENGTH + 1);
     temp++;
   }
+  *binarydata = (char *)realloc(*binarydata, (sizeof(char) * strlen(*binarydata)) + BINARY_LENGTH + 1);
+  strcat(*binarydata, NULL_TERMINATION);
   return true;
 }
 

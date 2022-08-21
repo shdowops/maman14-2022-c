@@ -11,7 +11,7 @@ int main(int argc, const char *argv[])
     }
     for (i = 1; i < argc; i++)
     {
-        filename = malloc(strlen(argv[i]) + 1);
+        filename = malloc(strlen(argv[i]) + MAX_EXT_LENGTH);
         strcpy(filename, argv[i]);
         strcat(filename, ORIGINAL_EXT); /*adding .as to file name*/
         fptr = fopen(filename, "r");

@@ -11,7 +11,7 @@ void firstpass(char *filename)
     char *token, *savedbinarydata;
     FILE *processedfile = fopen(filename, "r");
     head = NULL;
-    IC = 0;
+    IC = 100;
     DC = 0;
     linenumber = 0;
     no_error = true;
