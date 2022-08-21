@@ -1,5 +1,4 @@
 #include "firstpass.h"
-
 long IC, DC;
 long linenumber;
 extern Symbol *head, *tail;
@@ -17,16 +16,14 @@ void firstpass(char *filename)
     linenumber = 0;
     no_error = true;
 
-    /*read next line from file*/
     if (processedfile == NULL)
     {
-        alertFileError(ER_OPEN_FILE); /* Add error unable to open file*/
+        alertFileError(ER_OPEN_FILE);
         return;
     }
-
     while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
     {
-        memset(label, 0, MAX_LABEL_LENGTH - 1); /*Reset the label to nothing*/
+        memset(label, 0, MAX_LABEL_LENGTH - 1);
         savedbinarydata = NULL;
         is_label = is_data = is_code = is_entry = is_extern = false;
         ++linenumber;
@@ -34,10 +31,10 @@ void firstpass(char *filename)
         if (isEmptyLine(trimmedline) || isComment(trimmedline))
             continue;
 
-        is_label = isLabel(trimmedline, label); /*is it a label? */
+        is_label = isLabel(trimmedline, label); /*checking if it is a label */
 
-        if ((is_data = isDataSymbol(trimmedline))) /*is it .data? .string? .struct? */
-            if (is_label)
+        if ((is_data = isDataSymbol(trimmedline))) /*checking if it is a .data, .string, or .struct*/
+            if (is_label)                          /*If it is a label*/
             {
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
                 token = strtok(trimmedline, LINE_SPACE);
@@ -54,9 +51,9 @@ void firstpass(char *filename)
                 continue;
             }
 
-        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline))) /*is it .extern? .entry? */
+        if ((is_entry = isEntry(trimmedline)) || (is_extern = isExtern(trimmedline))) /*Checking if entry or extern*/
         {
-            if (is_extern)
+            if (is_extern) /*If is an extern*/
             {
                 token = strtok(trimmedline, ARGUMENT_SEPARATOR);
                 token = strtok(NULL, ARGUMENT_SEPARATOR);
@@ -66,12 +63,12 @@ void firstpass(char *filename)
             continue;
         }
 
-        is_code = true; /*all conditions failed - so it's code line*/
-        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* insert to symbol as code with IC value*/
+        is_code = true;
+        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
         token = (char *)malloc(sizeof(char *) * strlen(trimmedline));
         strcpy(token, trimmedline);
-        token = strtok(token, ARGUMENT_SEPARATOR);                      /*get instruction*/
-        no_error &= isCommand(token, &op_type);                            /* check instruction, if not exist, add error. */
+        token = strtok(token, ARGUMENT_SEPARATOR);                         /*get instruction*/
+        no_error &= isCommand(token, &op_type);                            /*check instruction, identify type, if not exist, alert appropriate error. */
         no_error &= check_opcode(trimmedline, &op_type, &savedbinarydata); /*check operands and count them*/
         free(token);
         strcat(savedbinarydata, ABSOLUTE);
@@ -80,7 +77,7 @@ void firstpass(char *filename)
     /* Finished reading the file*/
     if (!no_error)
         return;
-    /* update symbol list data adding the right IC */
+
     updateData(head);
     fclose(processedfile);
     /*Start second pass*/

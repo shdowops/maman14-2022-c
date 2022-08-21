@@ -15,7 +15,7 @@ Description: Run the first pass on the expanded file
 void firstpass(char *filename);
 
 /**
- * @brief Updated the data address number
+ * @brief Updates the data address numbers
  *
  * @param head The beginning of the Symbol list.
  */

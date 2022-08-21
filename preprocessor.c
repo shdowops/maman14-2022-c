@@ -6,7 +6,6 @@ void preprocessor(FILE *codefile, char *filename)
     FILE *processedfile;
     char line[MAX_LINE_LENGTH];
     char *found, *name, *macro, *token;
-
     Macro *newMacro = NULL, *macroToApply = NULL, *head = NULL;
     int macroflag = 0, macrolines = 1, firstmacro = 1;
     processedfile = fopen(strcat(strtok(filename, SEPARATOR), EXPANDED_EXT), "w");
@@ -14,12 +13,13 @@ void preprocessor(FILE *codefile, char *filename)
     /* searching file for macros and saving a processed file*/
     while ((fgets(line, MAX_LINE_LENGTH, codefile) != NULL))
     {
-        if (!macroflag)
+        if (!macroflag) /*If a macro is not found yet*/
         {
-            found = strstr(line, MACROSTART);
+            found = strstr(line, MACROSTART); /*Serching for the Macro Start*/
 
-            if (!found)
+            if (!found) /*If the Macro has already been stored in memory*/
             {
+                /*Adding the Macro at the required location*/
                 if ((macroToApply = isMacro(line, head)))
                     fputs(macroToApply->macro, processedfile);
                 else
@@ -33,25 +33,25 @@ void preprocessor(FILE *codefile, char *filename)
                 token = strtok(NULL, " "); /*Move to the macro name*/
                 if (token == NULL)
                 {
-                    /*Add error message for empty macro declaration*/
+                    alertError(ER_EMPTY_MACRO);
                     continue;
                 }
                 newMacro = (Macro *)malloc(sizeof(Macro));
                 name = (char *)malloc(strlen(token));
                 strcpy(name, token);
                 newMacro->name = name;
-                if (firstmacro)
+                if (firstmacro) /*If this is the first Macro*/
                 {
                     head = newMacro;
                     firstmacro = 0;
                 }
                 else
-                    addToMacroList(newMacro, head);
+                    addToMacroList(newMacro, head); /*Add Macro to list of Macros*/
             }
         }
         else
         {
-            found = strstr(line, MACROEND);
+            found = strstr(line, MACROEND); /*Searching for the end of a macro*/
             if (!found)
             {
                 macro = (char *)realloc(macro, MAX_LINE_LENGTH * macrolines);

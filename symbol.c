@@ -24,6 +24,7 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     symNew->data = data;
     symNew->next = NULL;
 
+    /*Updating the address*/
     if (is_Data)
     {
         symNew->address = DC;
@@ -37,19 +38,20 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
     {
         symNew->address = -1;
     }
-    else /* not data, not code, not entry and not extern ---> regular command*/
+    else
     {
         symNew->address = IC;
         IC++;
     }
 
-    if (head == NULL)
+    if (head == NULL) /*First symbol in the list*/
     {
         head = symNew;
         tail = symNew;
         return true;
     }
 
+    /*Searcing for location to add the new symbol*/
     while (temp != NULL)
     {
         if (strcmp(temp->name, symNew->name) == 0 && !is_Extern && strlen(labelname))
@@ -59,6 +61,7 @@ bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Ent
         }
         temp = temp->next;
     }
+    /*Symbol not found, add to list */
     tail->next = symNew;
     tail = tail->next;
     return true;
@@ -77,10 +80,9 @@ Symbol *findsymbol(Symbol *head, long address)
 
 Symbol *findname(Symbol *head, char *name)
 {
-
     while (head != NULL)
     {
-        if (strcmp(head->name,name)==0)
+        if (strcmp(head->name, name) == 0)
             return head;
         head = head->next;
     }
@@ -91,7 +93,7 @@ void update_entry_symbol(Symbol *head, char *text)
 {
     while (head != NULL)
     {
-        if (strcmp(head->name, text)==0)
+        if (strcmp(head->name, text) == 0)
         {
             head->is_Entry = true;
             return;

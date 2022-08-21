@@ -13,6 +13,9 @@
 #define ER_INPUT_FILE_NOT_EXIST "Input files do not exist"
 #define ER_FILE_FAIL_NAME_MEM "Failure with allocating memory for the file name"
 
+/*MACRO ERRORS*/
+#define ER_EMPTY_MACRO "Macro declaration without a body. Macro is empty"
+
 /*Label Errors*/
 #define ER_LABEL_NOT_FIRST_ALPHA "Label must start with a letter"
 #define ER_LABEL_TOO_LONG "The label is too long, max length allowed is 30 chars"
@@ -30,6 +33,7 @@
 #define ER_LABEL_KEYWORD "A label cannot have the same name as a keyword"
 #define ER_LABEL_REGISTER "A label cannot have the same name as a register"
 #define ER_LABEL_SPACE "Label contains space before colon"
+#define ER_IS_NOT_LABEL "Operand is not a label"
 
 /*Instruction Errors*/
 #define ER_INSTRUCTION_NOT_EXIST "Instraction %s does not exist"
@@ -58,7 +62,7 @@
 /*Entry Extern Errors*/
 #define ER_AFTER_ENTRY "After an entry a space is needed"
 #define ER_AFTER_EXTERN "After extern a space is needed"
-#define ER_EMPTY_ENTREY "Empty entry statement"
+#define ER_EMPTY_ENTRY "Empty entry statement"
 
 /*General Errors*/
 #define ER_NUM_OUT_OF_RANGE "There is a distinct range for numbers. -256 to 256 is the range. The number you provided is out of this range or not integer"
@@ -69,15 +73,15 @@
 #define OPERAND_EQUALS_KEYWORD "An operand cannot have a name that is the same as a keyword"
 #define ERROR_UNKNOWN_DECLARATION "This declartion is unrecognized"
 
-/** A global alert that prints an error in relation to file
- *Parameters:
- *@desc: error description
+/**
+ * @brief The method print a file error to stderr
+ * @param desc Error description
  */
 void alertFileError(char *desc);
 
 /**
- *A global alert that that prints an error message in regards to an error during a pass (compilation error)
- *@desc: The description of the error
+ * @brief The method prints an error in specific line to stderr
+ * @param desc Error description
  */
 void alertError(char *desc);
 

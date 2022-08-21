@@ -1,9 +1,10 @@
 
+#ifndef SYMBOL_H
+#define SYMBOL_H
 
-#ifndef SYMBOL_H /*!!!!!!!!!!!!!*/
-#define SYMBOL_H /*!!!!!!!!!!!!!*/
 #include "global.h"
 
+/*Defining a structure Symbol to handle the input of the file and to sort the types*/
 typedef struct Symbol
 {
     char *name;
@@ -17,21 +18,7 @@ typedef struct Symbol
     struct Symbol *next;
 } Symbol;
 
-typedef struct Data
-{
-    char *name;
-    long address;
-
-} Data;
-
 Symbol *head, *tail;
-
-/**
- *
- * @param
- * return:
- * pointer to newly created Symbol
- */
 
 /**
  * @brief The Method creates a new symbol based on the params that it recieves.
@@ -49,49 +36,36 @@ Symbol *head, *tail;
 bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Entry, bool is_Extern);
 
 /**
- * Print the symbol list
+ * @brief The Method prints the symbol list starting from head
  *
  */
 void print_symbol(Symbol *head);
 
 /**
  * @brief Finds a symbol by address
- * 
- * @param head 
- * @return Symbol* 
+ *
+ * @param head - The beginning of the list
+ * @param address - The starting address of the symbol.
+ * @return Symbol* if found otherwise NULL.
  */
 Symbol *findsymbol(Symbol *head, long address);
 
 /**
  * @brief Finds a symbol by name
- * 
- * @param head 
- * @return Symbol* 
+ *
+ * @param head - The beginning of the list
+ * @param name - The symbol to find
+ * @return Symbol* if found otherwise NULL.
  */
 Symbol *findname(Symbol *head, char *name);
 
 /**
- * @brief Finds a symbol to get the relevant address.
- * 
- * @param head 
- * @return Symbol* 
- */
-void update_entry_symbol(Symbol *head, char * text);
-
-/**
- * @brief
+ * @brief Update symbol as entry
  *
- * @param line Trimmed line after command, data, struct or string.
- * @return int length of the command
- */
-int check_length(char *line);
-
-/**
- * @brief search for symbol in symbol list
+ * @param head - The beginning of the list
+ * @param name - The name of the symbol
  *
- * @param head The begginig of the list
- * @param name The symbol name
  */
-void search_symbol(Symbol *head, char *name);
+void update_entry_symbol(Symbol *head, char *name);
 
 #endif
