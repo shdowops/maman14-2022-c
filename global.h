@@ -52,7 +52,7 @@
 extern long IC, DC;
 extern long linenumber;
 extern char *filename;
-
+/*Defining opcode struct*/
 typedef struct opcode
 {
     int decimal;

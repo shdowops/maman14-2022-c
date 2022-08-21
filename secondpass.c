@@ -83,6 +83,7 @@ void secondpass(char *filename)
             /*Check operands by command type*/
             if (op_type == TWO_OPERANDS)
             {
+                /*adding binary data according to operands*/
                 if (isRegister(firstoperand))
                 {
                     strcat(binarydata, "\n");
@@ -204,6 +205,7 @@ bool operand_to_binary(char *operand, Symbol *toupdate)
     }
     binarydata = (char *)realloc(binarydata, strlen(binarydata) + BINARY_LENGTH + 1);
     strcat(binarydata, "\n");
+    /*Handling Extern File*/
     if (getaddress->address == -1)
     {
         if (!ext_fptr)
@@ -239,7 +241,7 @@ void save_files(FILE *ent_fptr, FILE *obj_fptr, char *filename)
             binarydata = (char *)malloc(strlen(temp->binarydata));
             strcpy(binarydata, temp->binarydata);
             binarydata = strtok(binarydata, "\n");
-            while (binarydata)
+            while (binarydata)/*Handling Object File*/
             {
                 translated(convert_decimal_binary(IC), res);
                 fputs(res, obj_fptr);
@@ -253,7 +255,7 @@ void save_files(FILE *ent_fptr, FILE *obj_fptr, char *filename)
             free(binarydata);
         }
 
-        if (temp->is_Entry)
+        if (temp->is_Entry)/*Handling Entry File*/
         {
             if (!ent_fptr)
                 ent_fptr = fopen(strcat(strtok(filename, SEPARATOR), ENTRY_EXT), "wb");

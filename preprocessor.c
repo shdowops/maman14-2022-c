@@ -52,13 +52,13 @@ void preprocessor(FILE *codefile, char *filename)
         else
         {
             found = strstr(line, MACROEND); /*Searching for the end of a macro*/
-            if (!found)
+            if (!found)/*continue searching for macro lines*/
             {
                 macro = (char *)realloc(macro, MAX_LINE_LENGTH * macrolines);
                 strcat(macro, line);
                 macrolines++;
             }
-            else
+            else/*end macro*/
             {
                 macroflag = 0;
                 newMacro->macro = macro;

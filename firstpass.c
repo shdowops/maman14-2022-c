@@ -10,6 +10,7 @@ void firstpass(char *filename)
     char line[MAX_LINE_LENGTH], trimmedline[MAX_LINE_LENGTH], label[MAX_LABEL_LENGTH];
     char *token, *savedbinarydata;
     FILE *processedfile = fopen(filename, "r");
+    
     head = NULL;
     IC = 100;
     DC = 0;
@@ -21,7 +22,8 @@ void firstpass(char *filename)
         alertFileError(ER_OPEN_FILE);
         return;
     }
-    while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))
+    
+    while ((fgets(line, MAX_LINE_LENGTH, processedfile) != NULL))/*get next line*/
     {
         memset(label, 0, MAX_LABEL_LENGTH - 1);
         savedbinarydata = NULL;
@@ -39,6 +41,7 @@ void firstpass(char *filename)
                 no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /*creating a new data Symbol*/
                 token = strtok(trimmedline, LINE_SPACE);
                 token = trim(strtok(NULL, LINE_SPACE));
+                /*Adding binary data*/
                 if (isDataDeclaration(trimmedline))
                     no_error &= checkNumbers(token, &savedbinarydata);
                 else if (isStringDeclaration(trimmedline))
@@ -55,6 +58,7 @@ void firstpass(char *filename)
         {
             if (is_extern) /*If is an extern*/
             {
+                
                 token = strtok(trimmedline, ARGUMENT_SEPARATOR);
                 token = strtok(NULL, ARGUMENT_SEPARATOR);
                 no_error &= add_symbol(token, token, is_code, is_data, is_entry, is_extern);

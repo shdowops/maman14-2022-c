@@ -6,6 +6,8 @@
 #define MACROSTART "macro"
 #define MACROEND "endmacro"
 
+
+/*Definition Macro Struct*/
 typedef struct Macro
 {
     char *name;
