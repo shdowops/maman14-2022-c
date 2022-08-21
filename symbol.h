@@ -36,12 +36,6 @@ Symbol *head, *tail;
 bool add_symbol(char *line, char *label, bool is_Code, bool is_Data, bool is_Entry, bool is_Extern);
 
 /**
- * @brief The Method prints the symbol list starting from head
- *
- */
-void print_symbol(Symbol *head);
-
-/**
  * @brief Finds a symbol by address
  *
  * @param head - The beginning of the list
@@ -64,8 +58,14 @@ Symbol *findname(Symbol *head, char *name);
  *
  * @param head - The beginning of the list
  * @param name - The name of the symbol
- *
  */
 void update_entry_symbol(Symbol *head, char *name);
+
+/**
+ * @brief free symbols
+ *
+ * @param head - The beginning of the list
+ */
+void freeSymbols(Symbol *head);
 
 #endif

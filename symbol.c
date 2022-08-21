@@ -102,6 +102,23 @@ void update_entry_symbol(Symbol *head, char *text)
     }
 }
 
+void freeSymbols(Symbol *head)
+{
+    if (!head)
+        return;
+    if (head->next)
+        freeSymbols(head->next);
+
+    if(head->name)
+        free(head->name);
+    if(head->data)
+        free(head->data);
+    if(head->binarydata)
+        free(head->binarydata);
+
+    free(head);
+}
+
 void print_symbol(Symbol *head)
 {
     while (head != NULL)

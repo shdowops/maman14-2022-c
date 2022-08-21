@@ -64,7 +64,7 @@ void firstpass(char *filename)
         }
 
         is_code = true;
-        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern);
+        no_error &= add_symbol(trimmedline, label, is_code, is_data, is_entry, is_extern); /* create new code symbol */
         token = (char *)malloc(sizeof(char *) * strlen(trimmedline));
         strcpy(token, trimmedline);
         token = strtok(token, ARGUMENT_SEPARATOR);                         /*get instruction*/

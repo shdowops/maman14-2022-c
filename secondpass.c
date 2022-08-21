@@ -10,19 +10,20 @@ void secondpass(char *filename)
 {
     int op_type;
     char line[MAX_LINE_LENGTH];
-    char *firstoperand, *secondoperand, *trimmedline, *token, *binarydata , *noextension;
+    char *firstoperand, *secondoperand, *trimmedline, *token, *binarydata, *noextension;
     bool no_error;
     FILE *processedfile = fopen(filename, "r");
     Symbol *toupdate;
     linenumber = 0;
-
-    noextension = (char*)malloc(strlen(filename));
-    strcpy(noextension,filename);
-    noextension=strtok(noextension,SEPARATOR);
-
-    extfilename = (char*)malloc(strlen(noextension)+MAX_EXT_LENGTH);
-    extfilename = strcat(noextension,EXTERN_EXT);
-
+    ent_fptr = ext_fptr = obj_fptr = NULL;
+    /* External file preperation */
+    noextension = (char *)malloc(strlen(filename));
+    strcpy(noextension, filename);
+    noextension = strtok(noextension, SEPARATOR);
+    extfilename = (char *)malloc(strlen(noextension) + MAX_EXT_LENGTH);
+    memset(extfilename,0,strlen(noextension) + MAX_EXT_LENGTH);
+    strcat(extfilename, noextension);
+    strcat(extfilename,EXTERN_EXT);
 
     if (processedfile == NULL)
     {
@@ -121,12 +122,11 @@ void secondpass(char *filename)
     /* done reading file */
 
     if (!no_error)
-    {   
+    {
         remove(extfilename);
         return;
     }
 
-    print_symbol(head);
     strtok(filename, SEPARATOR);
     obj_fptr = fopen(strcat(filename, OBJECT_EXT), "wb");
     save_files(ent_fptr, obj_fptr, filename);
@@ -136,6 +136,10 @@ void secondpass(char *filename)
     if (ext_fptr)
         fclose(ext_fptr);
     fclose(obj_fptr);
+
+    free(noextension);
+    free(extfilename);
+    freeSymbols(head);
 }
 
 bool operand_to_binary(char *operand, Symbol *toupdate)
@@ -202,7 +206,7 @@ bool operand_to_binary(char *operand, Symbol *toupdate)
     strcat(binarydata, "\n");
     if (getaddress->address == -1)
     {
-        if(!ext_fptr)
+        if (!ext_fptr)
             ext_fptr = fopen(extfilename, "wb");
 
         strcat(binarydata, "00000000");
@@ -237,12 +241,12 @@ void save_files(FILE *ent_fptr, FILE *obj_fptr, char *filename)
             binarydata = strtok(binarydata, "\n");
             while (binarydata)
             {
-                translated(convert_decimal_binary(IC),res);
+                translated(convert_decimal_binary(IC), res);
                 fputs(res, obj_fptr);
-                fputs("\t",obj_fptr);
+                fputs("\t", obj_fptr);
                 translated(binarydata, res);
-                fputs(res,obj_fptr);
-                fputs("\n",obj_fptr);
+                fputs(res, obj_fptr);
+                fputs("\n", obj_fptr);
                 IC++;
                 binarydata = strtok(NULL, "\n");
             }
@@ -268,31 +272,30 @@ void save_files(FILE *ent_fptr, FILE *obj_fptr, char *filename)
 
 char *translated(char line[], char *res)
 {
-    int i,j;
+    int i, j;
     int numOne;
-    int numTwo;        
+    int numTwo;
     char language[] = {'!', '@', '#', '$', '%', '^', '&', '*', '<',
                        '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
                        'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'};
     char first[HALF_BINARY_LENGTH];
     char second[HALF_BINARY_LENGTH];
-    memset(first,0,HALF_BINARY_LENGTH);
-    memset(second,0,HALF_BINARY_LENGTH);
+    memset(first, 0, HALF_BINARY_LENGTH);
+    memset(second, 0, HALF_BINARY_LENGTH);
 
-    
-    for (i = 0; i < HALF_BINARY_LENGTH -1 ; i++) /*seperating first digit for base 32*/
+    for (i = 0; i < HALF_BINARY_LENGTH - 1; i++) /*seperating first digit for base 32*/
     {
         first[i] = line[i];
     }
-    j=i;
-    for (i = 0; i < HALF_BINARY_LENGTH -1 ; i++, j++) /*seperating second digit for base 32*/
+    j = i;
+    for (i = 0; i < HALF_BINARY_LENGTH - 1; i++, j++) /*seperating second digit for base 32*/
     {
         second[i] = line[j];
     }
     numOne = binary_converter(first);  /*identifying the value of first binary number*/
     numTwo = binary_converter(second); /*identifying the value of second binary number*/
-    res[0] = language[numOne]; /*translating the value of the first digit into base 32*/
-    res[1] = language[numTwo]; /*translating the value of the second digit into base 32*/
+    res[0] = language[numOne];         /*translating the value of the first digit into base 32*/
+    res[1] = language[numTwo];         /*translating the value of the second digit into base 32*/
     return res;
 }
 
@@ -304,7 +307,7 @@ int binary_converter(char binary[])
     int position;
     int index;
 
-    length = HALF_BINARY_LENGTH -1 ;
+    length = HALF_BINARY_LENGTH - 1;
     decimal = 0;
     position = 0;
     index = length - 1;
@@ -312,8 +315,8 @@ int binary_converter(char binary[])
     while (index >= 0)
     {
         decimal = decimal + (binary[index] - '0') * SQUARE(position); /*converts the decimal digit into equation*/
-        index--;                                                     /*updates the iterator*/
-        position++;                                                  /*updats the square level for the conversion of the binary number into decimal*/
+        index--;                                                      /*updates the iterator*/
+        position++;                                                   /*updats the square level for the conversion of the binary number into decimal*/
     }
     return decimal;
 }
